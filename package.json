@@ -51,69 +51,6 @@
                 "title": "Zoom Out",
                 "category": "System Information"
             }
-        ],
-        "configuration": [
-            {
-                "title": "System Information",
-                "properties": {
-                    "sysinfo.defaultZoom": {
-                        "type": "number",
-                        "default": 100,
-                        "description": "default zoom ( can be specified below the decimal point. )"
-                    },
-                    "sysinfo.zoomUnit": {
-                        "type": "number",
-                        "default": 10,
-                        "description": "zoom unit ( can be specified below the decimal point. )"
-                    },
-                    "sysinfo.zoomPreset": {
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "default": [
-                            300,
-                            200,
-                            150,
-                            120,
-                            110,
-                            100,
-                            90,
-                            80,
-                            75,
-                            50
-                        ],
-                        "description": "zoom preset ( can be specified below the decimal point. )"
-                    },
-                    "sysinfo.zoomInLabel": {
-                        "type": "string",
-                        "default": "+",
-                        "description": "zoom in's label"
-                    },
-                    "sysinfo.zoomOutLabel": {
-                        "type": "string",
-                        "default": "-",
-                        "description": "zoom out's label"
-                    },
-                    "sysinfo.uiDisplayOrder": {
-                        "type": "string",
-                        "enum": [
-                            "",
-                            "%",
-                            "+-",
-                            "-+",
-                            "+%-",
-                            "+-%",
-                            "%+-",
-                            "%-+",
-                            "-%+",
-                            "-+%"
-                        ],
-                        "default": "+%-",
-                        "description": "zoom UI display order"
-                    }
-                }
-            }
         ]
     },
     "scripts": {

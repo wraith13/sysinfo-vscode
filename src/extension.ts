@@ -2,13 +2,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as os from 'os';
 
 export module SysInfo
 {
     var pass_through;
-    var zoomLabel : vscode.StatusBarItem;
-    var zoomOutLabel : vscode.StatusBarItem;
-    var zoomInLabel : vscode.StatusBarItem;
 
     const cent = 100.0;
     const systemZoomUnit = 20.0;
@@ -53,14 +51,6 @@ export module SysInfo
             .filter(distinctFilter)
             .sort((a,b) => b - a);
     }
-    function getZoomInLabelText() : string
-    {
-        return getConfiguration<string>("zoomInLabel");
-    }
-    function getZoomOutLabelText() : string
-    {
-        return getConfiguration<string>("zoomOutLabel");
-    }
 
     export function registerCommand(context : vscode.ExtensionContext): void
     {
@@ -93,22 +83,77 @@ export module SysInfo
             )
         );
 
-        zoomLabel = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
-        zoomLabel.text = "zoom";
-        zoomLabel.command = "sysinfo-vscode.selectZoom";
-        zoomInLabel = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
-        zoomInLabel.text = getZoomInLabelText();
-        zoomInLabel.command = "sysinfo-vscode.zoomIn";
-        zoomOutLabel = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
-        zoomOutLabel.text = getZoomOutLabelText();
-        zoomOutLabel.command = "sysinfo-vscode.zoomOut";
+       console.log(`getSystemInformation(): ${JSON.stringify(getSystemInformation({withSensitiveData:false}), null, 4)}`);
+    }
 
-        context.subscriptions.push(zoomLabel);
-        context.subscriptions.push(zoomInLabel);
-        context.subscriptions.push(zoomOutLabel);
+    interface GetSystemInformationOptions
+    {
+        withSensitiveData ? : boolean;
+        withInternalExtensions ? : boolean;
+        withoutInactiveExtensions ? : boolean;
+    }
 
-        vscode.workspace.onDidChangeConfiguration(() => updateStatusBar());
-        updateStatusBar();
+    export function getSystemInformation(options : GetSystemInformationOptions) : object
+    {
+        return pass_through =
+        {
+            "os":
+            {
+                "arch": os.arch(),
+                "platform": os.platform(),
+                "type": os.type(),
+                "release": os.release(),
+                "cpus": os.cpus(),
+                "networkInterfaces": options.withSensitiveData ? os.networkInterfaces(): undefined,
+                "hostname": options.withSensitiveData ? os.hostname(): undefined,
+                "homedir": options.withSensitiveData ? os.homedir(): undefined,
+                "tmpdir": options.withSensitiveData ? os.tmpdir(): undefined,
+            },
+            "process":
+            {
+                "arch": process.arch,
+                "execPath": options.withSensitiveData ? process.execPath: undefined,
+                "execArgv": options.withSensitiveData ? process.execArgv: undefined,
+                "env":
+                {
+                    "LANG": process.env.LANG,
+                }
+            },
+            "vscode":
+            {
+                "version": vscode.version,
+                "env":
+                {
+                    "appName": vscode.env.appName,
+                    "language": vscode.env.language
+                },
+                "extensions": vscode.extensions.all
+                .filter
+                (
+                    extension =>
+                        (options.withInternalExtensions || !extension.id.startsWith("vscode.")) &&
+                        (!options.withoutInactiveExtensions || extension.isActive)
+                )
+                .map
+                (
+                    extension => pass_through =
+                    {
+                        "id": extension.id,
+                        "isActive": extension.isActive,
+                        "extensionPath": options.withSensitiveData ? extension.extensionPath: undefined,
+                        "packageJSON":
+                        {
+                            "name": extension.packageJSON.name,
+                            "version": extension.packageJSON.version,
+                            "displayName": extension.packageJSON.displayName,
+                            "description": extension.packageJSON.description,
+                            "publisher": extension.packageJSON.publisher,
+                            "categories": extension.packageJSON.categories,
+                        }
+                    }
+                )
+            },
+        };
     }
 
     export async function selectZoom() : Promise<void>
@@ -178,49 +223,6 @@ export module SysInfo
     {
         setZoomLevel(getZoomLevel() +getZoomUnitLevel());
     }
-    export function updateStatusBar() : void
-    {
-        var uiDisplayOrder = getConfiguration<string>("uiDisplayOrder");
-
-        uiDisplayOrder
-            .split("")
-            .filter(distinctFilter)
-            .reverse()
-            .forEach
-            (
-                i =>
-                {
-                    switch(i)
-                    {
-                    case "%":
-                        zoomLabel.text = percentToDisplayString(levelToPercent(getZoomLevel()));
-                        zoomLabel.show();
-                        break;
-                    case "+":
-                        zoomInLabel.text = getZoomInLabelText();
-                        zoomInLabel.show();
-                        break;
-                    case "-":
-                        zoomOutLabel.text = getZoomOutLabelText();
-                        zoomOutLabel.show();
-                        break;
-                    }
-                }
-            );
-        if (uiDisplayOrder.indexOf("%") < 0)
-        {
-            zoomLabel.hide();
-        }
-        if (uiDisplayOrder.indexOf("+") < 0)
-        {
-            zoomInLabel.hide();
-        }
-        if (uiDisplayOrder.indexOf("-") < 0)
-        {
-            zoomOutLabel.hide();
-        }
-    }
-
     export function levelToPercent(value : number) : number
     {
         return Math.pow(systemZoomUnitRate, value) * cent;
