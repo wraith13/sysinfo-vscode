@@ -1,0 +1,133 @@
+{
+    "name": "sysinfo-vscode",
+    "displayName": "System Information",
+    "description": "Show Visual Studio Code system information by markdown format.",
+    "icon": "images/infohex.128.png",
+    "version": "0.0.0",
+    "publisher": "wraith13",
+    "license": "SEE LICENSE IN LICENSE_1_0.txt",
+    "engines": {
+        "vscode": "^1.5.0"
+    },
+    "bugs": {
+        "url": "https://github.com/wraith13/sysinfo-vscode/issues"
+    },
+    "homepage": "https://github.com/wraith13/sysinfo-vscode/blob/master/README.md",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/wraith13/sysinfo-vscode.git"
+    },
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "zoom",
+        "status bar",
+        "statusbar"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "sysinfo-vscode.selectZoom",
+                "title": "Select Zoom",
+                "category": "System Information"
+            },
+            {
+                "command": "sysinfo-vscode.resetZoom",
+                "title": "Reset Zoom",
+                "category": "System Information"
+            },
+            {
+                "command": "sysinfo-vscode.zoomIn",
+                "title": "Zoom In",
+                "category": "System Information"
+            },
+            {
+                "command": "sysinfo-vscode.zoomOut",
+                "title": "Zoom Out",
+                "category": "System Information"
+            }
+        ],
+        "configuration": [
+            {
+                "title": "System Information",
+                "properties": {
+                    "sysinfo.defaultZoom": {
+                        "type": "number",
+                        "default": 100,
+                        "description": "default zoom ( can be specified below the decimal point. )"
+                    },
+                    "sysinfo.zoomUnit": {
+                        "type": "number",
+                        "default": 10,
+                        "description": "zoom unit ( can be specified below the decimal point. )"
+                    },
+                    "sysinfo.zoomPreset": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "default": [
+                            300,
+                            200,
+                            150,
+                            120,
+                            110,
+                            100,
+                            90,
+                            80,
+                            75,
+                            50
+                        ],
+                        "description": "zoom preset ( can be specified below the decimal point. )"
+                    },
+                    "sysinfo.zoomInLabel": {
+                        "type": "string",
+                        "default": "+",
+                        "description": "zoom in's label"
+                    },
+                    "sysinfo.zoomOutLabel": {
+                        "type": "string",
+                        "default": "-",
+                        "description": "zoom out's label"
+                    },
+                    "sysinfo.uiDisplayOrder": {
+                        "type": "string",
+                        "enum": [
+                            "",
+                            "%",
+                            "+-",
+                            "-+",
+                            "+%-",
+                            "+-%",
+                            "%+-",
+                            "%-+",
+                            "-%+",
+                            "-+%"
+                        ],
+                        "default": "+%-",
+                        "description": "zoom UI display order"
+                    }
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "typescript": "^2.9.2",
+        "vscode": "^1.1.21",
+        "mocha": "^2.3.3",
+        "@types/node": "^6.0.40",
+        "@types/mocha": "^2.2.32"
+    }
+}
