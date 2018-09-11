@@ -8,49 +8,23 @@ export module SysInfo
 {
     var pass_through;
 
-    const cent = 100.0;
-    const systemZoomUnit = 20.0;
-    const systemZoomUnitRate = (systemZoomUnit + cent) / cent;
-    const zoomLog = Math.log(systemZoomUnitRate);
+    const practicalTypeof = function(obj : any) : string
+    {
+        if (undefined === obj)
+        {
+            return "undefined";
+        }
+        if (null === obj)
+        {
+            return "null";
+        }
+        if ("[object Array]" === Object.prototype.toString.call(obj))
+        {
+            return "array";
+        }
 
-    function distinctFilter<type>(value : type, index : number, self : type[]) : boolean
-    {
-        return index === self.indexOf(value);
-    }
-
-    function getConfiguration<type>(key? : string, section : string = "sysinfo") : type
-    {
-        const configuration = vscode.workspace.getConfiguration(section);
-        return key ?
-            configuration[key] :
-            configuration;
-    }
-    function getZoomLevel() : number
-    {
-        return getConfiguration<number>("zoomLevel", "window") || 0.0;
-    }
-    function setZoomLevel(zoomLevel : number) : void
-    {
-        vscode.workspace.getConfiguration("window").update("zoomLevel", zoomLevel, true);
-    }
-    function getDefaultZoom() : number
-    {
-        return getConfiguration<number>("defaultZoom");
-    }
-    function getZoomUnit() : number
-    {
-        return getConfiguration<number>("zoomUnit");
-    }
-    function getZoomUnitLevel() : number
-    {
-        return percentToLevel(cent +getZoomUnit());
-    }
-    function getZoomPreset() : number[]
-    {
-        return getConfiguration<number[]>("zoomPreset")
-            .filter(distinctFilter)
-            .sort((a,b) => b - a);
-    }
+        return typeof obj;
+    };
 
     export function registerCommand(context : vscode.ExtensionContext): void
     {
@@ -58,58 +32,45 @@ export module SysInfo
         (
             vscode.commands.registerCommand
             (
-                'sysinfo-vscode.selectZoom', selectZoom
+                'sysinfo-vscode.showSystemInformation', showSystemInformation
             )
         );
-        context.subscriptions.push
-        (
-            vscode.commands.registerCommand
-            (
-                'sysinfo-vscode.resetZoom', resetZoom
-            )
-        );
-        context.subscriptions.push
-        (
-            vscode.commands.registerCommand
-            (
-                'sysinfo-vscode.zoomIn', zoomIn
-            )
-        );
-        context.subscriptions.push
-        (
-            vscode.commands.registerCommand
-            (
-                'sysinfo-vscode.zoomOut', zoomOut
-            )
-        );
-
-       console.log(`getSystemInformation(): ${JSON.stringify(getSystemInformation({withSensitiveData:false}), null, 4)}`);
     }
 
     interface GetSystemInformationOptions
     {
-        withSensitiveData ? : boolean;
-        withInternalExtensions ? : boolean;
-        withoutInactiveExtensions ? : boolean;
+        categories : string[];
+        withSensitiveData : boolean;
+        withInternalExtensions : boolean;
+        withoutInactiveExtensions : boolean;
     }
 
     export function getSystemInformation(options : GetSystemInformationOptions) : object
     {
+        const thisExtension = vscode.extensions.getExtension("wraith13.sysinfo-vscode");
         return pass_through =
         {
-            "os":
+            "timestamp": new Date().toISOString(),
+            "provider":
+            {
+                "name": thisExtension && thisExtension.packageJSON.name,
+                "displayName": thisExtension && thisExtension.packageJSON.displayName,
+                "version": thisExtension && thisExtension.packageJSON.version,
+                "options": options,
+            },
+            "os": 0 <= options.categories.indexOf("basic") ?
             {
                 "arch": os.arch(),
                 "platform": os.platform(),
                 "type": os.type(),
                 "release": os.release(),
-                "cpus": os.cpus(),
-                "networkInterfaces": options.withSensitiveData ? os.networkInterfaces(): undefined,
+                "cpus": 0 <= options.categories.indexOf("cpu") ? os.cpus(): undefined,
+                "networkInterfaces": 0 <= options.categories.indexOf("network") && options.withSensitiveData ? os.networkInterfaces(): undefined,
                 "hostname": options.withSensitiveData ? os.hostname(): undefined,
                 "homedir": options.withSensitiveData ? os.homedir(): undefined,
                 "tmpdir": options.withSensitiveData ? os.tmpdir(): undefined,
-            },
-            "process":
+            } : undefined,
+            "process": 0 <= options.categories.indexOf("basic") ?
             {
                 "arch": process.arch,
                 "execPath": options.withSensitiveData ? process.execPath: undefined,
@@ -118,7 +79,7 @@ export module SysInfo
                 {
                     "LANG": process.env.LANG,
                 }
-            },
+            } : undefined,
             "vscode":
             {
                 "version": vscode.version,
@@ -127,117 +88,256 @@ export module SysInfo
                     "appName": vscode.env.appName,
                     "language": vscode.env.language
                 },
-                "extensions": vscode.extensions.all
-                .filter
-                (
-                    extension =>
-                        (options.withInternalExtensions || !extension.id.startsWith("vscode.")) &&
-                        (!options.withoutInactiveExtensions || extension.isActive)
-                )
-                .map
-                (
-                    extension => pass_through =
-                    {
-                        "id": extension.id,
-                        "isActive": extension.isActive,
-                        "extensionPath": options.withSensitiveData ? extension.extensionPath: undefined,
-                        "packageJSON":
-                        {
-                            "name": extension.packageJSON.name,
-                            "version": extension.packageJSON.version,
-                            "displayName": extension.packageJSON.displayName,
-                            "description": extension.packageJSON.description,
-                            "publisher": extension.packageJSON.publisher,
-                            "categories": extension.packageJSON.categories,
-                        }
-                    }
-                )
+                "extensions": 0 <= options.categories.indexOf("extensions") ? getExtentionsformation(options): undefined,
             },
         };
     }
-
-    export async function selectZoom() : Promise<void>
+    export function getExtentionsformation(options : GetSystemInformationOptions) : object
     {
-        const currentZoom = roundZoom(levelToPercent(getZoomLevel()));
-        const select = await vscode.window.showQuickPick
+        return vscode.extensions.all
+        .filter
+        (
+            extension =>
+                (options.withInternalExtensions || !extension.id.startsWith("vscode.")) &&
+                (!options.withoutInactiveExtensions || extension.isActive)
+        )
+        .map
+        (
+            extension => pass_through =
+            {
+                "id": extension.id,
+                "isActive": extension.isActive,
+                "extensionPath": options.withSensitiveData ? extension.extensionPath: undefined,
+                "packageJSON":
+                {
+                    "name": extension.packageJSON.name,
+                    "version": extension.packageJSON.version,
+                    "displayName": extension.packageJSON.displayName,
+                    "description": extension.packageJSON.description,
+                    "publisher": extension.packageJSON.publisher,
+                    "categories": extension.packageJSON.categories,
+                }
+            }
+        );
+    }
+    async function openNewTextDocument(language : string) : Promise<vscode.TextDocument>
+    {
+        return await vscode.workspace.openTextDocument({ language });
+    }
+    async function openNewCodeDocument(language : string, code : string) : Promise<void>
+    {
+        const document = await openNewTextDocument(language);
+        const textEditor = await vscode.window.showTextDocument(document);
+        textEditor.edit
+        (
+            (editBuilder: vscode.TextEditorEdit) =>
+            {
+                editBuilder.insert(new vscode.Position(0,0), code);
+            }
+        );
+    }
+    export async function showSystemInformation() : Promise<void>
+    {
+        const selectedCategories =  await vscode.window.showQuickPick
         (
             [
                 {
-                    label: `Reset zoom`,
-                    description: "",
-                    detail: getDefaultZoom().toString(),
+                    "label": "Basic System Information",
+                    "description": "",
+                    "detail": "basic"
                 },
                 {
-                    label: `Input zoom`,
-                    description: "",
-                    detail: "*",
+                    "label": "Extensions Information",
+                    "description": "",
+                    "detail": "extensions"
+                },
+                {
+                    "label": "Full System Information",
+                    "description": "",
+                    "detail": "basic, cpu, network, extensions"
                 }
-            ]
-            .concat
-            (
-                getZoomPreset().map
-                (
-                    i => pass_through =
-                    {
-                        label: percentToDisplayString(i),
-                        description: currentZoom === roundZoom(i) ? "(current)": "",
-                        detail: i.toString()
-                    }
-                )
-            ),
+            ],
             {
-                placeHolder: "Select a zoom",
+                placeHolder: "Select categories option",
             }
         );
-        if (select)
+        if (!selectedCategories)
         {
-            if ("*" === select.detail)
-            {
-                let zoom : any = await vscode.window.showInputBox
-                (
-                    {
-                        prompt: "Input a zoom",
-                        value: currentZoom.toString(),
-                    }
-                );
-                if (undefined !== zoom)
-                {
-                    setZoomLevel(percentToLevel(parseFloat(zoom)));
-                }
-            }
-            else
-            {
-                setZoomLevel(percentToLevel(parseFloat(select.detail)));
-            }
+            return;
         }
+        const categories = selectedCategories.detail.split(",").map(i => i.trim());
+        const withSensitiveData = await vscode.window.showQuickPick
+        (
+            [
+                {
+                    "label": "without Sensitive Data",
+                    "description": "recommend",
+                    "detail": "false"
+                },
+                {
+                    "label": "with Sensitive Data",
+                    "description": "",
+                    "detail": "true"
+                }
+            ],
+            {
+                placeHolder: "Select withSensitiveData option",
+            }
+        );
+        if (!withSensitiveData)
+        {
+            return;
+        }
+        const withInternalExtensions = 0 <= categories.indexOf("extensions") ?
+            await vscode.window.showQuickPick
+            (
+                [
+                    {
+                        "label": "without Internal Extensions",
+                        "description": "recommend",
+                        "detail": "false"
+                    },
+                    {
+                        "label": "with Internal Extensions",
+                        "description": "true",
+                        "detail": ""
+                    }
+                ],
+                {
+                    placeHolder: "Select withInternalExtensions option",
+                }
+            ):
+            {
+                "label": "without Internal Extensions",
+                "description": "recommend",
+                "detail": "false"
+            };
+        if (!withInternalExtensions)
+        {
+            return;
+        }
+        const withoutInactiveExtensions = 0 <= categories.indexOf("extensions") ?
+            await vscode.window.showQuickPick
+            (
+                [
+                    {
+                        "label": "with Inactive Extensions",
+                        "description": "recommend",
+                        "detail": "false"
+                    },
+                    {
+                        "label": "without Inactive Extensions",
+                        "description": "",
+                        "detail": "true"
+                    }
+                ],
+                {
+                    placeHolder: "Select withoutInactiveExtensions option",
+                }
+            ):
+            {
+                "label": "with Inactive Extensions",
+                "description": "recommend",
+                "detail": "false"
+            };
+        if (!withoutInactiveExtensions)
+        {
+            return;
+        }
+        const information = getSystemInformation
+        (
+            {
+                categories: categories,
+                withSensitiveData: "true" === withSensitiveData.detail,
+                withInternalExtensions: "true" === withInternalExtensions.detail,
+                withoutInactiveExtensions: "true" === withoutInactiveExtensions.detail,
+            }
+        );
+        const format =  await vscode.window.showQuickPick
+        (
+            [
+                {
+                    "label": "Markdown",
+                    "description": "",
+                    "detail": "markdown"
+                },
+                {
+                    "label": "JSON",
+                    "description": "",
+                    "detail": "json"
+                }
+            ],
+            {
+                placeHolder: "Select a format",
+            }
+        );
+        if (!format)
+        {
+            return;
+        }
+        await openNewCodeDocument
+        (
+            format.detail,
+            "json" === format.detail ?
+                JSON.stringify(information, null, 4):
+                informationToMarkdown(information)
+        );
     }
-    export async function resetZoom() : Promise<void>
+    function makeMarkdownHeader(level : number, title : string) : string
     {
-        setZoomLevel(percentToLevel(getDefaultZoom()));
+        return `${"#".repeat(level)} ${title}\n`;
     }
-    export async function zoomOut() : Promise<void>
+    function makeMarkdownTable(data : any, level : number = 2, title? : string) : string
     {
-        setZoomLevel(getZoomLevel() -getZoomUnitLevel());
+        return pass_through =
+        [
+            title ? makeMarkdownHeader(level, title): null,
+            "| key | value |",
+            "|---|---|",
+        ]
+        .concat
+        (
+            Object.getOwnPropertyNames(data)
+                .filter(key => ("object" !== practicalTypeof(data[key]) || 0 === Object.getOwnPropertyNames(data[key]).length) && ("array" !== practicalTypeof(data[key]) || 0 === data[key].length || "string" === practicalTypeof(data[key][0])) && undefined !== data[key])
+                .map(key => `| ${key} | ${"string" === practicalTypeof(data[key]) ? data[key] :JSON.stringify(data[key])} |`)
+        )
+        .join("\n") +"\n"
+        +Object.getOwnPropertyNames(data)
+            .filter(key => "object" === practicalTypeof(data[key]) && 0 < Object.getOwnPropertyNames(data[key]).length)
+            .map(key => "\n" + makeMarkdownTable(data[key], level +1, key))
+        +Object.getOwnPropertyNames(data)
+            .filter(key => "array" === practicalTypeof(data[key]) && 0 < data[key].length && "string" !== practicalTypeof(data[key][0]))
+            .map
+            (
+                key =>
+                    "\n"
+                    +makeMarkdownHeader(level +1, key)
+                    +data[key].map((i : any, index : number) => makeMarkdownTable(i, level +2, `${index}`)).join("\n")
+            ).join("\n");
     }
-    export async function zoomIn() : Promise<void>
+    export function informationToMarkdown(information : any) : string
     {
-        setZoomLevel(getZoomLevel() +getZoomUnitLevel());
+        return pass_through =
+        [
+            makeMarkdownHeader(1, "VSCode System Information"),
+            `timestamp: ${information["timestamp"]}`,
+            makeMarkdownHeader(2, "Information Provider"),
+            makeMarkdownTable(information["provider"]),
+            information["os"] ? makeMarkdownHeader(2, "OS Information") : undefined,
+            information["os"] ? makeMarkdownTable(information["os"]) : undefined,
+            information["process"] ? makeMarkdownHeader(2, "Process Information") : undefined,
+            information["process"] ? makeMarkdownTable(information["process"]) : undefined,
+            makeMarkdownHeader(2, "VSCode Information"),
+            makeMarkdownTable(information["vscode"]),
+        ]
+        .join("\n");
     }
-    export function levelToPercent(value : number) : number
-    {
-        return Math.pow(systemZoomUnitRate, value) * cent;
-    }
-    export function percentToLevel(value : number) : number
-    {
-        return Math.log(value / cent) / zoomLog;
-    }
+
+    //  dummy for test
     export function roundZoom(value : number) : number
     {
+        const cent = 100.0;
         return Math.round(value *cent) /cent;
-    }
-    export function percentToDisplayString(value : number, locales?: string | string[]) : string
-    {
-        return `${roundZoom(value / cent).toLocaleString(locales, { style: "percent" })}`;
     }
 }
 
