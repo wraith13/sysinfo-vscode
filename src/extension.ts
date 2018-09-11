@@ -275,15 +275,6 @@ export module SysInfo
                     }
                     else
                     {
-if ("env" === key)
-{
-    console.log(`wraith13.sysinfo-vscode: practicalTypeof(data[key]): ${type}`);
-    console.log(`wraith13.sysinfo-vscode: env: ${JSON.stringify(data[key])}`);
-    console.log(`wraith13.sysinfo-vscode: Object.getOwnPropertyNames(data[key]).length: ${Object.getOwnPropertyNames(data[key]).length}`);
-    console.log(`wraith13.sysinfo-vscode: Object.getOwnPropertyNames(data[key])[0]: ${JSON.stringify(Object.getOwnPropertyNames(data[key])[0])}`);
-}
-
-
                         subTables.push({key: key, value: value});
                     }
                 }
