@@ -1,7 +1,7 @@
 {
     "name": "sysinfo-vscode",
     "displayName": "System Information",
-    "description": "Show Visual Studio Code system information by markdown format.",
+    "description": "Show Visual Studio Code system information ( includes extensions list ) by markdown or JSON.",
     "icon": "images/infohex.128.png",
     "version": "0.0.0",
     "publisher": "wraith13",
@@ -21,9 +21,11 @@
         "Other"
     ],
     "keywords": [
-        "zoom",
-        "status bar",
-        "statusbar"
+        "vscode",
+        "system",
+        "system information",
+        "extensions",
+        "extensions list"
     ],
     "activationEvents": [
         "onCommand:sysinfo-vscode.showSystemInformation"

@@ -8,7 +8,6 @@ src/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
-images/how-to-use.png
 images/screenshot.png
 images/infofex.1024.png
 images/infohex.ico

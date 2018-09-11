@@ -2,15 +2,13 @@
 
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/wraith13.sysinfo-vscode.svg) ![installs](https://vsmarketplacebadge.apphb.com/installs/wraith13.sysinfo-vscode.svg) ![rating](https://vsmarketplacebadge.apphb.com/rating/wraith13.sysinfo-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=wraith13.sysinfo-vscode)
 
-This Visual Studio Code extension shows system information by markdown format.
+This Visual Studio Code extension shows system information ( includes extensions list ) by markdown or JSON.
 
 ## Features
 
-Can zoom via GUI in status bar.
+`System Information: Show` command shows Visual Studio Code system information ( includes extensions list ) by markdown or JSON.
 
 ![screen shot](./images/screenshot.png)
-
-> System Information changes only `window.zoomLevel`, does not change editor font zoom.
 
 ## Tutorial
 
@@ -18,20 +16,15 @@ Can zoom via GUI in status bar.
 
 Show extension side bar within VS Code(Mac:<kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>, Windows and Linux: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>), type `sysinfo-vscode` and press <kbd>Enter</kbd> and click <kbd>Install</kbd>. Restart VS Code when installation is completed.
 
-### 1. 🔍 Zooming via GUI
+### 1. ✨️ Show System Information
 
-Click `-` to zoom out, click `+` to zoom in. And click zoom percentage to show zoom menu.
-
-![how to use](./images/how-to-use.png)
+Launch Command Palette(Mac:<kbd>F1</kbd> or <kbd>Shift</kbd>+<kbd>Command</kbd>+<kbd>P</kbd>, Windows and Linux: <kbd>F1</kbd> or <kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>P</kbd>), Execute `System Information: Show` command and select options as you like.
 
 Enjoy!
 
 ## Commands
 
-* `System Information: Select Zoom` : zoom by preset or input
-* `System Information: Reset Zoom` : reset zoom
-* `System Information: Zoom In` : zoom in
-* `System Information: Zoom Out` : zoom out
+* `System Information: Show` : show system information
 
 ## Release Notes
 

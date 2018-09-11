@@ -337,12 +337,12 @@ export module SysInfo
     {
         return pass_through =
         [
-            makeMarkdownHeader(1, "VSCode System Information"),
+            makeMarkdownHeader(1, "VS Code System Information"),
             `timestamp: ${information["timestamp"]}\n`,
             makeMarkdown(information["provider"], 2, "Information Provider", true),
             makeMarkdown(information["os"], 2, "OS Information"),
             makeMarkdown(information["process"], 2, "Process Information"),
-             makeMarkdown(information["vscode"], 2, "VSCode Information", true),
+             makeMarkdown(information["vscode"], 2, "VS Code Information", true),
         ]
         .filter(i => undefined !== i)
         .join("\n");
