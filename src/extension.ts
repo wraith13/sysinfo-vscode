@@ -42,7 +42,6 @@ export module SysInfo
         categories : string[];
         withSensitiveData : boolean;
         withInternalExtensions : boolean;
-        withoutInactiveExtensions : boolean;
     }
 
     export function getSystemInformation(options : GetSystemInformationOptions) : object
@@ -53,6 +52,7 @@ export module SysInfo
             "timestamp": new Date().toISOString(),
             "provider":
             {
+                "id": thisExtension && thisExtension.id,
                 "name": thisExtension && thisExtension.packageJSON.name,
                 "displayName": thisExtension && thisExtension.packageJSON.displayName,
                 "version": thisExtension && thisExtension.packageJSON.version,
@@ -64,7 +64,11 @@ export module SysInfo
                 "platform": os.platform(),
                 "type": os.type(),
                 "release": os.release(),
+                "EOL": JSON.stringify(os.EOL),
+                "endianness": os.endianness(),
                 "cpus": 0 <= options.categories.indexOf("cpu") ? os.cpus(): undefined,
+                "totalmem": 0 <= options.categories.indexOf("memory") ? os.totalmem(): undefined,
+                "freemem": 0 <= options.categories.indexOf("memory") ? os.freemem(): undefined,
                 "networkInterfaces": 0 <= options.categories.indexOf("network") && options.withSensitiveData ? os.networkInterfaces(): undefined,
                 "hostname": options.withSensitiveData ? os.hostname(): undefined,
                 "homedir": options.withSensitiveData ? os.homedir(): undefined,
@@ -95,12 +99,7 @@ export module SysInfo
     export function getExtentionsformation(options : GetSystemInformationOptions) : object
     {
         return vscode.extensions.all
-        .filter
-        (
-            extension =>
-                (options.withInternalExtensions || !extension.id.startsWith("vscode.")) &&
-                (!options.withoutInactiveExtensions || extension.isActive)
-        )
+        .filter(extension => (options.withInternalExtensions || !extension.id.startsWith("vscode.")))
         .map
         (
             extension => pass_through =
@@ -124,6 +123,18 @@ export module SysInfo
     {
         return await vscode.workspace.openTextDocument({ language });
     }
+    async function showQuickPick
+    (
+        items : vscode.QuickPickItem[],
+        options: vscode.QuickPickOptions,
+        autoSelectedIndex? : number
+    )
+    : Promise<vscode.QuickPickItem|undefined>
+    {
+        return undefined === autoSelectedIndex ?
+            await vscode.window.showQuickPick(items, options):
+            items[autoSelectedIndex];
+    }
     async function openNewCodeDocument(language : string, code : string) : Promise<void>
     {
         const document = await openNewTextDocument(language);
@@ -138,23 +149,18 @@ export module SysInfo
     }
     export async function showSystemInformation() : Promise<void>
     {
-        const selectedCategories =  await vscode.window.showQuickPick
+        const selectedCategories =  await showQuickPick
         (
             [
                 {
                     "label": "Basic System Information",
                     "description": "",
-                    "detail": "basic"
-                },
-                {
-                    "label": "Extensions Information",
-                    "description": "",
-                    "detail": "extensions"
+                    "detail": "basic, extensions"
                 },
                 {
                     "label": "Full System Information",
-                    "description": "",
-                    "detail": "basic, cpu, network, extensions"
+                    "description": "Becouse this data include sensitive data, recommend to keep private.",
+                    "detail": "basic, cpu, memory, network, extensions"
                 }
             ],
             {
@@ -165,92 +171,14 @@ export module SysInfo
         {
             return;
         }
-        const categories = selectedCategories.detail.split(",").map(i => i.trim());
-        const withSensitiveData = await vscode.window.showQuickPick
-        (
-            [
-                {
-                    "label": "without Sensitive Data",
-                    "description": "recommend",
-                    "detail": "false"
-                },
-                {
-                    "label": "with Sensitive Data",
-                    "description": "",
-                    "detail": "true"
-                }
-            ],
-            {
-                placeHolder: "Select withSensitiveData option",
-            }
-        );
-        if (!withSensitiveData)
-        {
-            return;
-        }
-        const withInternalExtensions = 0 <= categories.indexOf("extensions") ?
-            await vscode.window.showQuickPick
-            (
-                [
-                    {
-                        "label": "without Internal Extensions",
-                        "description": "recommend",
-                        "detail": "false"
-                    },
-                    {
-                        "label": "with Internal Extensions",
-                        "description": "true",
-                        "detail": ""
-                    }
-                ],
-                {
-                    placeHolder: "Select withInternalExtensions option",
-                }
-            ):
-            {
-                "label": "without Internal Extensions",
-                "description": "recommend",
-                "detail": "false"
-            };
-        if (!withInternalExtensions)
-        {
-            return;
-        }
-        const withoutInactiveExtensions = 0 <= categories.indexOf("extensions") ?
-            await vscode.window.showQuickPick
-            (
-                [
-                    {
-                        "label": "with Inactive Extensions",
-                        "description": "recommend",
-                        "detail": "false"
-                    },
-                    {
-                        "label": "without Inactive Extensions",
-                        "description": "",
-                        "detail": "true"
-                    }
-                ],
-                {
-                    placeHolder: "Select withoutInactiveExtensions option",
-                }
-            ):
-            {
-                "label": "with Inactive Extensions",
-                "description": "recommend",
-                "detail": "false"
-            };
-        if (!withoutInactiveExtensions)
-        {
-            return;
-        }
+        const categories = (selectedCategories.detail || "").split(",").map(i => i.trim());
+        const isFull = selectedCategories.label.toLowerCase().startsWith("full ");
         const information = getSystemInformation
         (
             {
                 categories: categories,
-                withSensitiveData: "true" === withSensitiveData.detail,
-                withInternalExtensions: "true" === withInternalExtensions.detail,
-                withoutInactiveExtensions: "true" === withoutInactiveExtensions.detail,
+                withSensitiveData: isFull,
+                withInternalExtensions: isFull,
             }
         );
         const format =  await vscode.window.showQuickPick
@@ -287,49 +215,144 @@ export module SysInfo
     {
         return `${"#".repeat(level)} ${title}\n`;
     }
-    function makeMarkdownTable(data : any, level : number = 2, title? : string) : string
+    function makeMarkdownTable(data : [{key:string,value:any}]) : string
     {
         return pass_through =
         [
-            title ? makeMarkdownHeader(level, title): null,
             "| key | value |",
-            "|---|---|",
+            0 < data.filter(i => "number" !== practicalTypeof(i.value)).length ? "|---|---|": "|---|---:|",
         ]
         .concat
         (
-            Object.getOwnPropertyNames(data)
-                .filter(key => ("object" !== practicalTypeof(data[key]) || 0 === Object.getOwnPropertyNames(data[key]).length) && ("array" !== practicalTypeof(data[key]) || 0 === data[key].length || "string" === practicalTypeof(data[key][0])) && undefined !== data[key])
-                .map(key => `| ${key} | ${"string" === practicalTypeof(data[key]) ? data[key] :JSON.stringify(data[key])} |`)
+            data.map
+            (
+                i =>
+                    "string" === practicalTypeof(i.value) ? `| ${i.key} | ${i.value} |`:
+                    "number" === practicalTypeof(i.value) ? `| ${i.key} | ${i.value.toLocaleString()} |`:
+                    `| ${i.key} | ${JSON.stringify(i.value)} |`
+            )
         )
-        .join("\n") +"\n"
-        +Object.getOwnPropertyNames(data)
-            .filter(key => "object" === practicalTypeof(data[key]) && 0 < Object.getOwnPropertyNames(data[key]).length)
-            .map(key => "\n" + makeMarkdownTable(data[key], level +1, key))
-        +Object.getOwnPropertyNames(data)
-            .filter(key => "array" === practicalTypeof(data[key]) && 0 < data[key].length && "string" !== practicalTypeof(data[key][0]))
-            .map
+        .join("\n") +"\n";
+    }
+    function makeMarkdown(data : any, level : number = 2, title? : string, isExtensionData : boolean = false) : string | undefined
+    {
+        if (!data)
+        {
+            return undefined;
+        }
+
+        const extensionLinks = (isExtensionData && data && data.id) ?
+            [
+                `- [open in marketplace](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
+                `- [open in vscode](vscode:extension/${data.id})\n`
+            ]
+            .join(""):
+            undefined;
+
+        const tableItems : [{key:string,value:any}] = <any>[];
+        const arrayItems : [{key:string,value:[any]}] = <any>[];
+        const subTables : [{key:string,value:any}] = <any>[];
+        Object.getOwnPropertyNames(data)
+            .filter(key => undefined !== data[key])
+            .forEach
             (
                 key =>
-                    "\n"
-                    +makeMarkdownHeader(level +1, key)
-                    +data[key].map((i : any, index : number) => makeMarkdownTable(i, level +2, `${index}`)).join("\n")
-            ).join("\n");
+                {
+                    const value = data[key];
+                    const type = practicalTypeof(value);
+                    if
+                    (
+                        ("object" !== type || 0 === Object.getOwnPropertyNames(value).filter(i => undefined !== value[i]).length) &&
+                        ("array" !== type || 0 === value.length || "string" === practicalTypeof(value[0]))
+                    )
+                    {
+                        tableItems.push({key: key, value: value});
+                    }
+                    else
+                    if ("array" === type)
+                    {
+                        arrayItems.push({key: key, value: value});
+                    }
+                    else
+                    {
+if ("env" === key)
+{
+    console.log(`wraith13.sysinfo-vscode: practicalTypeof(data[key]): ${type}`);
+    console.log(`wraith13.sysinfo-vscode: env: ${JSON.stringify(data[key])}`);
+    console.log(`wraith13.sysinfo-vscode: Object.getOwnPropertyNames(data[key]).length: ${Object.getOwnPropertyNames(data[key]).length}`);
+    console.log(`wraith13.sysinfo-vscode: Object.getOwnPropertyNames(data[key])[0]: ${JSON.stringify(Object.getOwnPropertyNames(data[key])[0])}`);
+}
+
+
+                        subTables.push({key: key, value: value});
+                    }
+                }
+            );
+        if (isExtensionData && data && data.packageJSON)
+        {
+            subTables.pop();
+            Object.getOwnPropertyNames(data.packageJSON)
+                .filter(key => undefined !== data.packageJSON[key])
+                .forEach
+                (
+                    key =>
+                    {
+                        if (undefined !== data.packageJSON[key])
+                        {
+                            tableItems.push({key: key, value: data.packageJSON[key]});
+                        }
+                    }
+                );
+        }
+
+        return pass_through =
+        [
+            title ? makeMarkdownHeader(level, title): undefined,
+            extensionLinks,
+            0 < tableItems.length ? makeMarkdownTable(tableItems): undefined,
+        ]
+        .concat(subTables.map(i => makeMarkdown(i.value, level + 1, i.key, isExtensionData)))
+        .concat
+        (
+            arrayItems.map
+            (
+                i => pass_through =
+                [
+                    makeMarkdownHeader(level +1, i.key),
+                    undefined
+                ]
+                .concat
+                (
+                    i.value.map
+                    (
+                        (j : any, index : number) => makeMarkdown
+                        (
+                            j,
+                            level +2,
+                            isExtensionData && j && j.packageJSON && j.packageJSON.displayName ? j.packageJSON.displayName: `${i.key}.${index}`,
+                            isExtensionData
+                        )
+                    )
+                )
+                .filter(i => undefined !== i)
+                .join("\n")
+            )
+        )
+        .filter(i => undefined !== i)
+        .join("\n");
     }
     export function informationToMarkdown(information : any) : string
     {
         return pass_through =
         [
             makeMarkdownHeader(1, "VSCode System Information"),
-            `timestamp: ${information["timestamp"]}`,
-            makeMarkdownHeader(2, "Information Provider"),
-            makeMarkdownTable(information["provider"]),
-            information["os"] ? makeMarkdownHeader(2, "OS Information") : undefined,
-            information["os"] ? makeMarkdownTable(information["os"]) : undefined,
-            information["process"] ? makeMarkdownHeader(2, "Process Information") : undefined,
-            information["process"] ? makeMarkdownTable(information["process"]) : undefined,
-            makeMarkdownHeader(2, "VSCode Information"),
-            makeMarkdownTable(information["vscode"]),
+            `timestamp: ${information["timestamp"]}\n`,
+            makeMarkdown(information["provider"], 2, "Information Provider", true),
+            makeMarkdown(information["os"], 2, "OS Information"),
+            makeMarkdown(information["process"], 2, "Process Information"),
+             makeMarkdown(information["vscode"], 2, "VSCode Information", true),
         ]
+        .filter(i => undefined !== i)
         .join("\n");
     }
 
