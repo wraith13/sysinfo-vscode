@@ -76,6 +76,7 @@ export module SysInfo
             } : undefined,
             "process": 0 <= options.categories.indexOf("basic") ?
             {
+                "versions": process.versions,
                 "arch": process.arch,
                 "execPath": options.withSensitiveData ? process.execPath: undefined,
                 "execArgv": options.withSensitiveData ? process.execArgv: undefined,
