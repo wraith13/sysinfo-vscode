@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## 1.0.2 - 2018-09-??
 
+### Fixed
+
+- fixed markdown \\ escape problem.
+
 ### Removed
 
 - Removed images/infohex.1024.png from package.

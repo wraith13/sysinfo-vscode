@@ -212,9 +212,13 @@ export module SysInfo
                 informationToMarkdown(information)
         );
     }
+    function escapeMarkdown(text : string) : string
+    {
+        return text.replace(/\\/g, "\\\\");
+    }
     function makeMarkdownHeader(level : number, title : string) : string
     {
-        return `${"#".repeat(level)} ${title}\n`;
+        return `${"#".repeat(level)} ${escapeMarkdown(title)}\n`;
     }
     function makeMarkdownTable(data : [{key:string,value:any}]) : string
     {
@@ -228,9 +232,9 @@ export module SysInfo
             data.map
             (
                 i =>
-                    "string" === practicalTypeof(i.value) ? `| ${i.key} | ${i.value} |`:
-                    "number" === practicalTypeof(i.value) ? `| ${i.key} | ${i.value.toLocaleString()} |`:
-                    `| ${i.key} | ${JSON.stringify(i.value)} |`
+                    "string" === practicalTypeof(i.value) ? `| ${escapeMarkdown(i.key)} | ${escapeMarkdown(i.value)} |`:
+                    "number" === practicalTypeof(i.value) ? `| ${escapeMarkdown(i.key)} | ${escapeMarkdown(i.value.toLocaleString())} |`:
+                    `| ${escapeMarkdown(i.key)} | ${escapeMarkdown(JSON.stringify(i.value))} |`
             )
         )
         .join("\n") +"\n";
