@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.0.2 - 2018-09-??
+
+### Removed
+
+- Removed images/infohex.1024.png from package.
+
 ## 1.0.1 - 2018-09-12
 
 ### Fixed
