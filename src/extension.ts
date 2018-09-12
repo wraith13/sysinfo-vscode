@@ -253,7 +253,7 @@ export module SysInfo
         const tableItems : [{key:string,value:any}] = <any>[];
         const arrayItems : [{key:string,value:[any]}] = <any>[];
         const subTables : [{key:string,value:any}] = <any>[];
-        Object.getOwnPropertyNames(data)
+        Object.keys(data)
             .filter(key => undefined !== data[key])
             .forEach
             (
@@ -263,7 +263,7 @@ export module SysInfo
                     const type = practicalTypeof(value);
                     if
                     (
-                        ("object" !== type || 0 === Object.getOwnPropertyNames(value).filter(i => undefined !== value[i]).length) &&
+                        ("object" !== type || 0 === Object.keys(value).filter(i => undefined !== value[i]).length) &&
                         ("array" !== type || 0 === value.length || "string" === practicalTypeof(value[0]))
                     )
                     {
@@ -283,7 +283,7 @@ export module SysInfo
         if (isExtensionData && data && data.packageJSON)
         {
             subTables.pop();
-            Object.getOwnPropertyNames(data.packageJSON)
+            Object.keys(data.packageJSON)
                 .filter(key => undefined !== data.packageJSON[key])
                 .forEach
                 (
