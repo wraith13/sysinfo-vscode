@@ -12,6 +12,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Removed
 
+- Removed internal extensions links. ( because link destination does not exist )
 - Removed images/infohex.1024.png from package.
 
 ## 1.0.1 - 2018-09-12

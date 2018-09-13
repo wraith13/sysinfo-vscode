@@ -97,10 +97,18 @@ export module SysInfo
             },
         };
     }
+    interface Extension
+    {
+        id : string;
+    }
+    function isInternalExtension(extension : Extension) : boolean
+    {
+        return extension.id.startsWith("vscode.");
+    }
     export function getExtentionsformation(options : GetSystemInformationOptions) : object
     {
         return vscode.extensions.all
-        .filter(extension => (options.withInternalExtensions || !extension.id.startsWith("vscode.")))
+        .filter(extension => (options.withInternalExtensions || !isInternalExtension(extension)))
         .map
         (
             extension => pass_through =
@@ -246,7 +254,7 @@ export module SysInfo
             return undefined;
         }
 
-        const extensionLinks = (isExtensionData && data && data.id) ?
+        const extensionLinks = (isExtensionData && data && data.id && !isInternalExtension(data)) ?
             [
                 `- [open in marketplace](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
                 `- [open in vscode](vscode:extension/${data.id})\n`
