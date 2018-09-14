@@ -58,6 +58,7 @@ export module SysInfo
                 "version": thisExtension && thisExtension.packageJSON.version,
                 "options": options,
             },
+            "warning": undefined, // 表示位置をここにする為に undefined で事前挿入
             "os": 0 <= options.categories.indexOf("basic") ?
             {
                 "arch": os.arch(),
@@ -128,6 +129,15 @@ export module SysInfo
             }
         );
     }
+    export function systemLint(information : any) : any
+    {
+        if ("darwin" === information["os"]["platform"] && undefined === information["process"]["env"]["LANG"])
+        {
+            information["warnings"] = information["warnings"] || { };
+            information["warnings"]["W001"] = "LANG environment variable is empty. Clipboard related extensions do not work correctly with Non-ASCII characters. To avoid this problem, you should launch vscode from Terminal.app. See <https://github.com/Microsoft/vscode/issues/16261>.";
+        }
+        return information;
+    }
     async function openNewTextDocument(language : string) : Promise<vscode.TextDocument>
     {
         return await vscode.workspace.openTextDocument({ language });
@@ -190,6 +200,7 @@ export module SysInfo
                 withInternalExtensions: isFull,
             }
         );
+        systemLint(information);
         const format =  await vscode.window.showQuickPick
         (
             [
@@ -352,9 +363,10 @@ export module SysInfo
             makeMarkdownHeader(1, "VS Code System Information"),
             `timestamp: ${information["timestamp"]}\n`,
             makeMarkdown(information["provider"], 2, "Information Provider", true),
+            makeMarkdown(information["warnings"], 2, "Warnings"),
             makeMarkdown(information["os"], 2, "OS Information"),
             makeMarkdown(information["process"], 2, "Process Information"),
-             makeMarkdown(information["vscode"], 2, "VS Code Information", true),
+            makeMarkdown(information["vscode"], 2, "VS Code Information", true),
         ]
         .filter(i => undefined !== i)
         .join("\n");

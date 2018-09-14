@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.1.0 - 2018-09-??
+
+### Added
+
+- System Lint ( When system with problems, show warnings section. )
+
 ## 1.0.2 - 2018-09-13
 
 ### Fixed
