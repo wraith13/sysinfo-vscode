@@ -408,7 +408,7 @@ export module SysInfo
         return pass_through =
         [
             makeMarkdownHeader(1, "VS Code System Information"),
-            `timestamp: ${information["timestamp"]}\n`,
+            information["timestamp"] && `timestamp: ${information["timestamp"]}\n`,
             makeMarkdown(information["provider"], 2, "Information Provider", true),
             makeMarkdown(information["warnings"], 2, "Warnings"),
             makeMarkdown(information["os"], 2, "OS Information"),
