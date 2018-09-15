@@ -26,6 +26,14 @@ export module SysInfo
         return typeof obj;
     };
 
+    function getConfiguration<type>(key? : string, section : string = "sysinfo") : type
+    {
+        const configuration = vscode.workspace.getConfiguration(section);
+        return key ?
+            configuration[key] :
+            configuration;
+    }
+
     export function registerCommand(context : vscode.ExtensionContext): void
     {
         context.subscriptions.push
@@ -138,6 +146,44 @@ export module SysInfo
         }
         return information;
     }
+    export function hideInformation(information : any) : any
+    {
+        getConfiguration<string[]>("hideItems").forEach
+        (
+            path =>
+            {
+                var parents = [information];
+                path.split(".").forEach
+                (
+                    (key, index, keys) =>
+                    {
+                        if (0 < parents.length)
+                        {
+                            if (index +1 < keys.length)
+                            {
+                                if ("*" === key)
+                                {
+                                    parents = parents
+                                        .map(parent => Object.keys(parent).map(i => parent[i]))
+                                        .reduce((a,b) => a.concat(b));
+                                }
+                                else
+                                {
+                                    parents = parents.map(parent => parent[key]);
+                                }
+                            }
+                            else
+                            {
+                                parents.forEach(parent => delete parent[key]);
+                            }
+                        }
+                    }
+                );
+            }
+        );
+        return information;
+    }
+
     async function openNewTextDocument(language : string) : Promise<vscode.TextDocument>
     {
         return await vscode.workspace.openTextDocument({ language });
@@ -201,6 +247,7 @@ export module SysInfo
             }
         );
         systemLint(information);
+        hideInformation(information);
         const format =  await vscode.window.showQuickPick
         (
             [

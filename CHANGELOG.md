@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 
 - System Lint ( When system with problems, show warnings section. )
+- `sysinfo.hideItems` configuration
 
 ## 1.0.2 - 2018-09-13
 

@@ -38,6 +38,22 @@
                 "title": "Show",
                 "category": "System Information"
             }
+        ],
+        "configuration": [
+            {
+                "title": "System Information",
+                "properties": {
+                    "sysinfo.hideItems": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "default": [
+                        ],
+                        "description": "list of hide items ( see README )"
+                    }
+                }
+            }
         ]
     },
     "scripts": {
