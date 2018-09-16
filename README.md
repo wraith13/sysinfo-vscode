@@ -20,11 +20,33 @@ Show extension side bar within VS Code(Mac:<kbd>Command</kbd>+<kbd>Shift</kbd>+<
 
 Launch Command Palette(Mac:<kbd>F1</kbd> or <kbd>Shift</kbd>+<kbd>Command</kbd>+<kbd>P</kbd>, Windows and Linux: <kbd>F1</kbd> or <kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>P</kbd>), Execute `System Information: Show` command and select options as you like.
 
+### 2. 🔧 Next step
+
+You can change [settings](#extension-settings) by `settings.json`.
+
 Enjoy!
 
 ## Commands
 
 * `System Information: Show` : show system information
+
+## Extension Settings
+
+This extension contributes the following settings by [`settings.json`](https://code.visualstudio.com/docs/customization/userandworkspace#_creating-user-and-workspace-settings)( Mac: <kbd>Command</kbd>+<kbd>,</kbd>, Windows / Linux: <kbd>File</kbd> -> <kbd>Preferences</kbd> -> <kbd>User Settings</kbd> ):
+
+* `sysinfo.hideItems`: set list of hide items
+
+You can hide the specified items. see below example.
+
+```json
+"sysinfo.hideItems": [
+    "timestamp",
+    "provider",
+    "warnings.W001",
+    "vscode.env",
+    "vscode.extensions.*.packageJSON.description"
+]
+```
 
 ## Release Notes
 
