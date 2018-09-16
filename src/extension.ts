@@ -164,12 +164,19 @@ export module SysInfo
                                 if ("*" === key)
                                 {
                                     parents = parents
-                                        .map(parent => Object.keys(parent).map(i => parent[i]))
+                                        .map
+                                        (
+                                            parent => Object.keys(parent)
+                                                .map(i => parent[i])
+                                                .filter(i => undefined !== i)
+                                        )
                                         .reduce((a,b) => a.concat(b));
                                 }
                                 else
                                 {
-                                    parents = parents.map(parent => parent[key]);
+                                    parents = parents
+                                        .map(parent => parent[key])
+                                        .filter(parent => undefined !== parent);
                                 }
                             }
                             else
