@@ -4,7 +4,13 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## 1.1.0 - 2018-09-??
+## 1.1.1 - 2018-09-16
+
+### Fixed
+
+- fixed description mistake in CHANGE.md
+
+## 1.1.0 - 2018-09-16
 
 ### Added
 
