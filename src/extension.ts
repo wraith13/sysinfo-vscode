@@ -398,7 +398,9 @@ export module SysInfo
                         (
                             j,
                             level +2,
-                            isExtensionData && j && j.packageJSON && j.packageJSON.displayName ? j.packageJSON.displayName: `${i.key}.${index}`,
+                            isExtensionData && j && j.packageJSON && j.packageJSON.displayName ? j.packageJSON.displayName:
+                            isExtensionData && j && j.packageJSON && j.packageJSON.name ? j.packageJSON.name:
+                                `${i.key}.${index}`,
                             isExtensionData
                         )
                     )
