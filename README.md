@@ -2,7 +2,7 @@
 
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/wraith13.sysinfo-vscode.svg) ![installs](https://vsmarketplacebadge.apphb.com/installs/wraith13.sysinfo-vscode.svg) ![rating](https://vsmarketplacebadge.apphb.com/rating/wraith13.sysinfo-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=wraith13.sysinfo-vscode)
 
-This Visual Studio Code extension shows system information ( includes extensions list ) by markdown or JSON.
+Show system information ( includes extensions list ) by markdown or JSON for vscode.
 
 ## Features
 
