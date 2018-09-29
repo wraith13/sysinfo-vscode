@@ -12,7 +12,7 @@
     "bugs": {
         "url": "https://github.com/wraith13/sysinfo-vscode/issues"
     },
-    "homepage": "https://github.com/wraith13/sysinfo-vscode/blob/master/README.md",
+    "homepage": "https://github.com/wraith13/sysinfo-vscode",
     "repository": {
         "type": "git",
         "url": "https://github.com/wraith13/sysinfo-vscode.git"
