@@ -1,10 +1,11 @@
 {
     "name": "sysinfo-vscode",
-    "displayName": "System Information",
-    "description": "Show system information ( includes extensions list ) by markdown or JSON for vscode",
+    "displayName": "%sysinfo-vscode.title%",
+    "description": "%sysinfo-vscode.description%",
     "icon": "images/infohex.128.png",
     "version": "1.1.2",
     "publisher": "wraith13",
+    "readme": "%sysinfo-vscode.readme%",
     "license": "SEE LICENSE IN LICENSE_1_0.txt",
     "engines": {
         "vscode": "^1.9.1"
@@ -35,13 +36,13 @@
         "commands": [
             {
                 "command": "sysinfo-vscode.showSystemInformation",
-                "title": "Show",
-                "category": "System Information"
+                "title": "%sysinfo-vscode.showSystemInformation.title%",
+                "category": "%sysinfo-vscode.title%"
             }
         ],
         "configuration": [
             {
-                "title": "System Information",
+                "title": "%sysinfo-vscode.title%",
                 "properties": {
                     "sysinfo.hideItems": {
                         "type": "array",
@@ -50,7 +51,7 @@
                         },
                         "default": [
                         ],
-                        "description": "list of hide items ( see README )"
+                        "description": "%sysinfo-vscode.hideItems.description%"
                     }
                 }
             }

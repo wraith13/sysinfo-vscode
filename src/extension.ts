@@ -4,6 +4,14 @@
 import * as vscode from 'vscode';
 import * as os from 'os';
 
+import localeEn from "./i18n/en.json";
+//import localeJa from "./i18n/ja.json";
+
+const localeTable : { [key : string] : string } = Object.assign(localeEn, ((<any>{
+//    ja : localeJa
+})[<string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale] || { }));
+const locale = (key : string) : string => localeTable[key] || `locale("${key}")`;
+
 export module SysInfo
 {
     var pass_through;
@@ -142,7 +150,7 @@ export module SysInfo
         if ("darwin" === information["os"]["platform"] && undefined === information["process"]["env"]["LANG"])
         {
             information["warnings"] = information["warnings"] || { };
-            information["warnings"]["W001"] = "LANG environment variable is empty. Clipboard related extensions do not work correctly with Non-ASCII characters. To avoid this problem, you should launch vscode from Terminal.app. See <https://github.com/Microsoft/vscode/issues/16261>.";
+            information["warnings"]["W001"] = locale("W001");
         }
         return information;
     }
@@ -225,18 +233,18 @@ export module SysInfo
         (
             [
                 {
-                    "label": "Basic System Information",
+                    "label": locale("BasicInfo.label"),
                     "description": "",
                     "detail": "basic, extensions"
                 },
                 {
-                    "label": "Full System Information",
-                    "description": "Becouse this data include sensitive data, recommend to keep private.",
+                    "label": locale("FullInfo.label"),
+                    "description": locale("FullInfo.description"),
                     "detail": "basic, cpu, memory, network, extensions"
                 }
             ],
             {
-                placeHolder: "Select categories option",
+                placeHolder: locale("selectCategories.placeHolder"),
             }
         );
         if (!selectedCategories)
@@ -270,7 +278,7 @@ export module SysInfo
                 }
             ],
             {
-                placeHolder: "Select a format",
+                placeHolder: locale("selectFormat.placeHolder"),
             }
         );
         if (!format)
@@ -321,8 +329,8 @@ export module SysInfo
 
         const extensionLinks = (isExtensionData && data && data.id && !isInternalExtension(data)) ?
             [
-                `- [open in marketplace](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
-                `- [open in vscode](vscode:extension/${data.id})\n`
+                `- [${locale("link.marketplace.label")}](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
+                `- [${locale("link.vscode.label")}](vscode:extension/${data.id})\n`
             ]
             .join(""):
             undefined;

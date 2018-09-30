@@ -1,0 +1,7 @@
+{
+    "sysinfo-vscode.title": "System Information",
+    "sysinfo-vscode.description": "Show system information ( includes extensions list ) by markdown or JSON for VS Code",
+    "sysinfo-vscode.readme": "README.md",
+    "sysinfo-vscode.showSystemInformation.title": "Show",
+    "sysinfo-vscode.hideItems.description": "list of hide items ( see README )"
+}
