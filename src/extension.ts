@@ -5,10 +5,10 @@ import * as vscode from 'vscode';
 import * as os from 'os';
 
 import localeEn from "./i18n/en.json";
-//import localeJa from "./i18n/ja.json";
+import localeJa from "./i18n/ja.json";
 
 const localeTable : { [key : string] : string } = Object.assign(localeEn, ((<any>{
-//    ja : localeJa
+    ja : localeJa
 })[<string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale] || { }));
 const locale = (key : string) : string => localeTable[key] || `locale("${key}")`;
 

@@ -1,0 +1,7 @@
+{
+    "sysinfo-vscode.title": "システム情報",
+    "sysinfo-vscode.description": "VS Code のシステム情報(拡張一覧を含む)を markdown あるいは JSON で表示します。",
+    "sysinfo-vscode.readme": "README.ja.md",
+    "sysinfo-vscode.showSystemInformation.title": "表示",
+    "sysinfo-vscode.hideItems.description": "隠す項目の一覧 ( README を参照 )"
+}
