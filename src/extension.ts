@@ -4,8 +4,8 @@
 import * as vscode from 'vscode';
 import * as os from 'os';
 
-import localeEn from "./i18n/en.json";
-import localeJa from "./i18n/ja.json";
+import localeEn from "../package.nls.json";
+import localeJa from "../package.nls.ja.json";
 
 const localeTable : { [key : string] : string } = Object.assign(localeEn, ((<any>{
     ja : localeJa
