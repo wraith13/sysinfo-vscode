@@ -10,7 +10,7 @@ import localeJa from "../package.nls.ja.json";
 const localeTable : { [key : string] : string } = Object.assign(localeEn, ((<any>{
     ja : localeJa
 })[<string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale] || { }));
-const locale = (key : string) : string => localeTable[key] || `locale("${key}")`;
+const locale = (key : string) : string => localeTable[key] || key;
 
 export module SysInfo
 {
