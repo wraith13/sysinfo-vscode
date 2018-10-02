@@ -1,7 +1,5 @@
 {
     "sysinfo-vscode.title": "System Information",
-    "sysinfo-vscode.description": "Show system information ( includes extensions list ) by markdown or JSON for VS Code",
-    "sysinfo-vscode.readme": "README.md",
     "sysinfo-vscode.showSystemInformation.title": "Show",
     "sysinfo-vscode.hideItems.description": "list of hide items ( see README )",
     "W001": "LANG environment variable is empty. Clipboard related extensions do not work correctly with Non-ASCII characters. To avoid this problem, you should launch VS Code from Terminal.app. See <https://github.com/Microsoft/vscode/issues/16261>.",

@@ -4,9 +4,15 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## 1.2.0 - 2018-10-02
+## 1.2.1 - 2018-10-02
 
 ### Fixed
+
+- fixed multi-language support bugs
+
+## 1.2.0 - 2018-10-02
+
+### Added
 
 - support Japanese
 

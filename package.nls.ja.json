@@ -1,7 +1,5 @@
 {
     "sysinfo-vscode.title": "システム情報",
-    "sysinfo-vscode.description": "VS Code のシステム情報(拡張一覧を含む)を markdown あるいは JSON で表示します。",
-    "sysinfo-vscode.readme": "README.ja.md",
     "sysinfo-vscode.showSystemInformation.title": "表示",
     "sysinfo-vscode.hideItems.description": "隠す項目の一覧 ( README を参照 )",
     "W001": "LANG 環境変数が設定されていません。クリップボードに関連した拡張で非ASCIIな文字が正常に機能しません。この問題を避ける為、 VS Code は Terminal.app から起動してください。こちらを参照 <https://github.com/Microsoft/vscode/issues/16261> 。",
