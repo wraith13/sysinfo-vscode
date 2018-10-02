@@ -7,10 +7,15 @@ import * as os from 'os';
 import localeEn from "../package.nls.json";
 import localeJa from "../package.nls.ja.json";
 
-const localeTable : { [key : string] : string } = Object.assign(localeEn, ((<any>{
+interface LocaleEntry
+{
+    [key : string] : string;
+}
+const localeTableKey = <string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale;
+const localeTable = Object.assign(localeEn, ((<{[key : string] : LocaleEntry}>{
     ja : localeJa
-})[<string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale] || { }));
-const locale = (key : string) : string => localeTable[key] || key;
+})[localeTableKey] || { }));
+const localeString = (key : string) : string => localeTable[key] || key;
 
 export module SysInfo
 {
@@ -150,7 +155,7 @@ export module SysInfo
         if ("darwin" === information["os"]["platform"] && undefined === information["process"]["env"]["LANG"])
         {
             information["warnings"] = information["warnings"] || { };
-            information["warnings"]["W001"] = locale("W001");
+            information["warnings"]["W001"] = localeString("W001");
         }
         return information;
     }
@@ -233,18 +238,18 @@ export module SysInfo
         (
             [
                 {
-                    "label": locale("BasicInfo.label"),
+                    "label": localeString("BasicInfo.label"),
                     "description": "",
                     "detail": "basic, extensions"
                 },
                 {
-                    "label": locale("FullInfo.label"),
-                    "description": locale("FullInfo.description"),
+                    "label": localeString("FullInfo.label"),
+                    "description": localeString("FullInfo.description"),
                     "detail": "basic, cpu, memory, network, extensions"
                 }
             ],
             {
-                placeHolder: locale("selectCategories.placeHolder"),
+                placeHolder: localeString("selectCategories.placeHolder"),
             }
         );
         if (!selectedCategories)
@@ -278,7 +283,7 @@ export module SysInfo
                 }
             ],
             {
-                placeHolder: locale("selectFormat.placeHolder"),
+                placeHolder: localeString("selectFormat.placeHolder"),
             }
         );
         if (!format)
@@ -329,8 +334,8 @@ export module SysInfo
 
         const extensionLinks = (isExtensionData && data && data.id && !isInternalExtension(data)) ?
             [
-                `- [${locale("link.marketplace.label")}](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
-                `- [${locale("link.vscode.label")}](vscode:extension/${data.id})\n`
+                `- [${localeString("link.marketplace.label")}](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
+                `- [${localeString("link.vscode.label")}](vscode:extension/${data.id})\n`
             ]
             .join(""):
             undefined;
