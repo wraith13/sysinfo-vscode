@@ -1,4 +1,4 @@
-# System Information README
+# System Information README ( [🇯🇵 Japanese](https://github.com/wraith13/sysinfo-vscode/blob/master/README.ja.md) )
 
 [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/wraith13.sysinfo-vscode.svg) ![installs](https://vsmarketplacebadge.apphb.com/installs/wraith13.sysinfo-vscode.svg) ![rating](https://vsmarketplacebadge.apphb.com/rating/wraith13.sysinfo-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=wraith13.sysinfo-vscode)
 
