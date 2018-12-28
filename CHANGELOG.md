@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.2.2 - 2018-12-??
+
+### Fixed
+
+- fixed that option specification not work bugs in Japanese Environment
+
 ## 1.2.1 - 2018-10-02
 
 ### Fixed

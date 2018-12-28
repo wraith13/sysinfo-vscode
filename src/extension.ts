@@ -257,7 +257,7 @@ export module SysInfo
             return;
         }
         const categories = (selectedCategories.detail || "").split(",").map(i => i.trim());
-        const isFull = selectedCategories.label.toLowerCase().startsWith("full ");
+        const isFull = selectedCategories.label === localeString("FullInfo.label");
         const information = getSystemInformation
         (
             {
