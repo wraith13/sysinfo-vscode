@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.2.3 - 2018-12-30
+
+### Fixed
+
+- update internal packages because secrity reason
+
 ## 1.2.2 - 2018-12-30
 
 ### Fixed
