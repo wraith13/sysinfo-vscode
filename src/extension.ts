@@ -9,19 +9,17 @@ import localeJa from "../package.nls.ja.json";
 
 interface LocaleEntry
 {
-    [key : string] : string;
+    [key: string]: string;
 }
 const localeTableKey = <string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale;
-const localeTable = Object.assign(localeEn, ((<{[key : string] : LocaleEntry}>{
-    ja : localeJa
+const localeTable = Object.assign(localeEn, ((<{[key: string]: LocaleEntry}>{
+    ja: localeJa
 })[localeTableKey] || { }));
-const localeString = (key : string) : string => localeTable[key] || key;
+const localeString = (key: string): string => localeTable[key] || key;
 
 export module SysInfo
 {
-    var pass_through;
-
-    const practicalTypeof = function(obj : any) : string
+    const practicalTypeof = (obj: any): string =>
     {
         if (undefined === obj)
         {
@@ -39,15 +37,15 @@ export module SysInfo
         return typeof obj;
     };
 
-    function getConfiguration<type>(key? : string, section : string = "sysinfo") : type
+    const getConfiguration = <type>(key?: string, section: string = "sysinfo"): type =>
     {
         const configuration = vscode.workspace.getConfiguration(section);
         return key ?
-            configuration[key] :
+            configuration[key]:
             configuration;
-    }
+    };
 
-    export function registerCommand(context : vscode.ExtensionContext): void
+    export const registerCommand = (context: vscode.ExtensionContext): void =>
     {
         context.subscriptions.push
         (
@@ -56,20 +54,19 @@ export module SysInfo
                 'sysinfo-vscode.showSystemInformation', showSystemInformation
             )
         );
-    }
+    };
 
     interface GetSystemInformationOptions
     {
-        categories : string[];
-        withSensitiveData : boolean;
-        withInternalExtensions : boolean;
+        categories: string[];
+        withSensitiveData: boolean;
+        withInternalExtensions: boolean;
     }
 
-    export function getSystemInformation(options : GetSystemInformationOptions) : object
+    export const getSystemInformation = (options: GetSystemInformationOptions): object =>
     {
         const thisExtension = vscode.extensions.getExtension("wraith13.sysinfo-vscode");
-        return pass_through =
-        {
+        return {
             "timestamp": new Date().toISOString(),
             "provider":
             {
@@ -95,7 +92,7 @@ export module SysInfo
                 "hostname": options.withSensitiveData ? os.hostname(): undefined,
                 "homedir": options.withSensitiveData ? os.homedir(): undefined,
                 "tmpdir": options.withSensitiveData ? os.tmpdir(): undefined,
-            } : undefined,
+            }: undefined,
             "process": 0 <= options.categories.indexOf("basic") ?
             {
                 "versions": process.versions,
@@ -106,7 +103,7 @@ export module SysInfo
                 {
                     "LANG": process.env.LANG,
                 }
-            } : undefined,
+            }: undefined,
             "vscode":
             {
                 "version": vscode.version,
@@ -118,23 +115,21 @@ export module SysInfo
                 "extensions": 0 <= options.categories.indexOf("extensions") ? getExtentionsformation(options): undefined,
             },
         };
-    }
+    };
     interface Extension
     {
-        id : string;
+        id: string;
     }
-    function isInternalExtension(extension : Extension) : boolean
-    {
-        return extension.id.startsWith("vscode.");
-    }
-    export function getExtentionsformation(options : GetSystemInformationOptions) : object
+    const isInternalExtension = (extension: Extension): boolean => extension.id.startsWith("vscode.");
+
+    export const getExtentionsformation = (options: GetSystemInformationOptions): object =>
     {
         return vscode.extensions.all
         .filter(extension => (options.withInternalExtensions || !isInternalExtension(extension)))
         .map
         (
-            extension => pass_through =
-            {
+            extension =>
+            ({
                 "id": extension.id,
                 "isActive": extension.isActive,
                 "extensionPath": options.withSensitiveData ? extension.extensionPath: undefined,
@@ -147,10 +142,10 @@ export module SysInfo
                     "publisher": extension.packageJSON.publisher,
                     "categories": extension.packageJSON.categories,
                 }
-            }
+            })
         );
-    }
-    export function systemLint(information : any) : any
+    };
+    export const systemLint = (information: any): any =>
     {
         if ("darwin" === information["os"]["platform"] && undefined === information["process"]["env"]["LANG"])
         {
@@ -158,8 +153,8 @@ export module SysInfo
             information["warnings"]["W001"] = localeString("W001");
         }
         return information;
-    }
-    export function hideInformation(information : any) : any
+    };
+    export const hideInformation = (information: any): any =>
     {
         getConfiguration<string[]>("hideItems").forEach
         (
@@ -202,25 +197,20 @@ export module SysInfo
             }
         );
         return information;
-    }
+    };
 
-    async function openNewTextDocument(language : string) : Promise<vscode.TextDocument>
-    {
-        return await vscode.workspace.openTextDocument({ language });
-    }
-    async function showQuickPick
-    (
-        items : vscode.QuickPickItem[],
+    const openNewTextDocument = async (language: string): Promise<vscode.TextDocument> =>
+        await vscode.workspace.openTextDocument({ language });
+
+    const showQuickPick = async (
+        items: vscode.QuickPickItem[],
         options: vscode.QuickPickOptions,
-        autoSelectedIndex? : number
-    )
-    : Promise<vscode.QuickPickItem|undefined>
-    {
-        return undefined === autoSelectedIndex ?
+        autoSelectedIndex?: number
+    ): Promise<vscode.QuickPickItem|undefined> => undefined === autoSelectedIndex ?
             await vscode.window.showQuickPick(items, options):
             items[autoSelectedIndex];
-    }
-    async function openNewCodeDocument(language : string, code : string) : Promise<void>
+
+    const openNewCodeDocument = async (language: string, code: string): Promise<void> =>
     {
         const document = await openNewTextDocument(language);
         const textEditor = await vscode.window.showTextDocument(document);
@@ -231,8 +221,8 @@ export module SysInfo
                 editBuilder.insert(new vscode.Position(0,0), code);
             }
         );
-    }
-    export async function showSystemInformation() : Promise<void>
+    };
+    export const showSystemInformation = async (): Promise<void> =>
     {
         const selectedCategories =  await showQuickPick
         (
@@ -297,19 +287,14 @@ export module SysInfo
                 JSON.stringify(information, null, 4):
                 informationToMarkdown(information)
         );
-    }
-    function escapeMarkdown(text : string) : string
+    };
+
+    const escapeMarkdown = (text: string): string => text.replace(/\\/g, "\\\\");
+    const makeMarkdownHeader =(level: number, title: string): string => `${"#".repeat(level)} ${escapeMarkdown(title)}\n`;
+
+    const makeMarkdownTable = (data: [{key:string,value:any}]): string =>
     {
-        return text.replace(/\\/g, "\\\\");
-    }
-    function makeMarkdownHeader(level : number, title : string) : string
-    {
-        return `${"#".repeat(level)} ${escapeMarkdown(title)}\n`;
-    }
-    function makeMarkdownTable(data : [{key:string,value:any}]) : string
-    {
-        return pass_through =
-        [
+        return [
             "| key | value |",
             0 < data.filter(i => "number" !== practicalTypeof(i.value)).length ? "|---|---|": "|---|---:|",
         ]
@@ -324,8 +309,8 @@ export module SysInfo
             )
         )
         .join("\n") +"\n";
-    }
-    function makeMarkdown(data : any, level : number = 2, title? : string, isExtensionData : boolean = false) : string | undefined
+    };
+    const makeMarkdown = (data: any, level: number = 2, title?: string, isExtensionData: boolean = false): string | undefined =>
     {
         if (!data)
         {
@@ -340,9 +325,9 @@ export module SysInfo
             .join(""):
             undefined;
 
-        const tableItems : [{key:string,value:any}] = <any>[];
-        const arrayItems : [{key:string,value:[any]}] = <any>[];
-        const subTables : [{key:string,value:any}] = <any>[];
+        const tableItems: [{key:string,value:any}] = <any>[];
+        const arrayItems: [{key:string,value:[any]}] = <any>[];
+        const subTables: [{key:string,value:any}] = <any>[];
         Object.keys(data)
             .filter(key => undefined !== data[key])
             .forEach
@@ -387,8 +372,7 @@ export module SysInfo
                 );
         }
 
-        return pass_through =
-        [
+        return [
             title ? makeMarkdownHeader(level, title): undefined,
             extensionLinks,
             0 < tableItems.length ? makeMarkdownTable(tableItems): undefined,
@@ -398,7 +382,7 @@ export module SysInfo
         (
             arrayItems.map
             (
-                i => pass_through =
+                i =>
                 [
                     makeMarkdownHeader(level +1, i.key),
                     undefined
@@ -407,7 +391,7 @@ export module SysInfo
                 (
                     i.value.map
                     (
-                        (j : any, index : number) => makeMarkdown
+                        (j: any, index: number) => makeMarkdown
                         (
                             j,
                             level +2,
@@ -424,11 +408,10 @@ export module SysInfo
         )
         .filter(i => undefined !== i)
         .join("\n");
-    }
-    export function informationToMarkdown(information : any) : string
+    };
+    export const informationToMarkdown = (information: any): string =>
     {
-        return pass_through =
-        [
+        return [
             makeMarkdownHeader(1, "VS Code System Information"),
             information["timestamp"] && `timestamp: ${information["timestamp"]}\n`,
             makeMarkdown(information["provider"], 2, "Information Provider", true),
@@ -439,21 +422,21 @@ export module SysInfo
         ]
         .filter(i => undefined !== i)
         .join("\n");
-    }
+    };
 
     //  dummy for test
-    export function roundZoom(value : number) : number
+    export const roundZoom = (value: number): number =>
     {
         const cent = 100.0;
         return Math.round(value *cent) /cent;
-    }
+    };
 }
 
-export function activate(context: vscode.ExtensionContext) : void
+export function activate(context: vscode.ExtensionContext): void
 {
     SysInfo.registerCommand(context);
 }
 
-export function deactivate() : void
+export function deactivate(): void
 {
 }
