@@ -8,7 +8,7 @@
     "readme": "README.md",
     "license": "SEE LICENSE IN LICENSE_1_0.txt",
     "engines": {
-        "vscode": "^1.9.1"
+        "vscode": "^1.35.0"
     },
     "bugs": {
         "url": "https://github.com/wraith13/sysinfo-vscode/issues"
@@ -68,6 +68,6 @@
         "@types/node": "^6.0.40",
         "mocha": "^6.1.4",
         "typescript": "^2.9.2",
-        "vscode": "^1.1.33"
+        "vscode": "^1.1.35"
     }
 }
