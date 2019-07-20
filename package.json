@@ -29,7 +29,7 @@
         "extensions list"
     ],
     "activationEvents": [
-        "onCommand:sysinfo-vscode.showSystemInformation"
+        "*"
     ],
     "main": "./out/source/extension",
     "contributes": {
@@ -44,6 +44,16 @@
             {
                 "title": "%sysinfo-vscode.title%",
                 "properties": {
+                    "sysinfo.statusBar.enabled": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "%sysinfo-vscode.statusBar.enabled.description%"
+                    },
+                    "sysinfo.statusBar.label": {
+                        "type": "string",
+                        "default": "vscode:${vscode.version}",
+                        "description": "%sysinfo-vscode.statusBar.label.description%"
+                    },
                     "sysinfo.hideItems": {
                         "type": "array",
                         "items": {
