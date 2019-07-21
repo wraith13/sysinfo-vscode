@@ -19,6 +19,35 @@ const localeString = (key: string): string => localeTable[key] || key;
 
 export module SysInfo
 {
+    let statusBarItem : vscode.StatusBarItem;
+    const createStatusBarItem =
+    (
+        properties :
+        {
+            alignment ? : vscode.StatusBarAlignment,
+            text ? : string,
+            command ? : string,
+            tooltip ? : string
+        }
+    )
+    : vscode.StatusBarItem =>
+    {
+        const result = vscode.window.createStatusBarItem(properties.alignment);
+        if (undefined !== properties.text)
+        {
+            result.text = properties.text;
+        }
+        if (undefined !== properties.command)
+        {
+            result.command = properties.command;
+        }
+        if (undefined !== properties.tooltip)
+        {
+            result.tooltip = properties.tooltip;
+        }
+        return result;
+    };
+
     const practicalTypeof = (obj: any): string =>
     {
         if (undefined === obj)
@@ -45,15 +74,32 @@ export module SysInfo
             configuration;
     };
 
-    export const registerCommand = (context: vscode.ExtensionContext): void =>
+    export const initialize = (context: vscode.ExtensionContext): void =>
     {
         context.subscriptions.push
         (
+            //  コマンドの登録
             vscode.commands.registerCommand
             (
                 'sysinfo-vscode.showSystemInformation', showSystemInformation
-            )
+            ),
+
+            //  ステータスバーアイテムの登録
+            statusBarItem = createStatusBarItem
+            ({
+                alignment: vscode.StatusBarAlignment.Left,
+                command: 'sysinfo-vscode.showSystemInformation',
+                tooltip: localeString("statusbar.show.tooltip")
+            }),
+
+            //  イベントリスナーの登録
+            vscode.workspace.onDidChangeConfiguration(() => onDidChangeConfiguration())
         );
+
+        onDidChangeConfiguration();
+    };
+    const onDidChangeConfiguration = () : void =>
+    {
     };
 
     interface GetSystemInformationOptions
@@ -434,7 +480,7 @@ export module SysInfo
 
 export function activate(context: vscode.ExtensionContext): void
 {
-    SysInfo.registerCommand(context);
+    SysInfo.initialize(context);
 }
 
 export function deactivate(): void
