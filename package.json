@@ -44,17 +44,17 @@
             {
                 "title": "%sysinfo-vscode.title%",
                 "properties": {
-                    "sysinfo.statusBar.enabled": {
+                    "sysinfo.enabledStatusBar": {
                         "type": "boolean",
                         "default": true,
                         "description": "%sysinfo-vscode.statusBar.enabled.description%"
                     },
-                    "sysinfo.statusBar.label": {
+                    "sysinfo.statusBarLabel": {
                         "type": "string",
                         "default": "vscode:${vscode.version}",
                         "description": "%sysinfo-vscode.statusBar.label.description%"
                     },
-                    "sysinfo.statusBar.command": {
+                    "sysinfo.statusBarCommand": {
                         "type": "string",
                         "default": "sysinfo-vscode.showSystemInformation",
                         "description": "%sysinfo-vscode.statusBar.command.description%"
