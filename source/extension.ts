@@ -100,6 +100,16 @@ export module SysInfo
     };
     const onDidChangeConfiguration = () : void =>
     {
+        if (getConfiguration<boolean>("enabledStatusBar"))
+        {
+            statusBarItem.text = getConfiguration<string>("statusBarLabel");
+            statusBarItem.command = getConfiguration<string>("statusBarCommand");
+            statusBarItem.show();
+        }
+        else
+        {
+            statusBarItem.hide();
+        }
     };
 
     interface GetSystemInformationOptions
