@@ -87,7 +87,7 @@ export module SysInfo
             //  ステータスバーアイテムの登録
             statusBarItem = createStatusBarItem
             ({
-                alignment: vscode.StatusBarAlignment.Left,
+                alignment: vscode.StatusBarAlignment.Right,
                 command: 'sysinfo-vscode.showSystemInformation',
                 tooltip: localeString("statusbar.show.tooltip")
             }),
@@ -102,7 +102,16 @@ export module SysInfo
     {
         if (getConfiguration<boolean>("enabledStatusBar"))
         {
-            statusBarItem.text = getConfiguration<string>("statusBarLabel");
+            statusBarItem.text = developInfomation
+            (
+                getConfiguration<string>("statusBarLabel"),
+                getSystemInformation
+                ({
+                    categories: [ "basic", "cpu", "memory", "network" ],
+                    withSensitiveData: false,
+                    withInternalExtensions: false,
+                })
+            );
             statusBarItem.command = getConfiguration<string>("statusBarCommand");
             statusBarItem.show();
         }
@@ -111,6 +120,25 @@ export module SysInfo
             statusBarItem.hide();
         }
     };
+    const developInfomation = (source: string, information: any): string => source
+        .replace
+        (
+            /\$\{([\w\.]+)\}/g,
+            (_match, p1) =>
+            {
+                switch(p1)
+                {
+                case "vscode.version":
+                    return information.vscode.version;
+                case "vscode.env.appName":
+                    return information.vscode.env.appName;
+                case "vscode.env.language":
+                    return information.vscode.env.language;
+                default:
+                    return "ERROR";
+                }
+            }
+        );
 
     interface GetSystemInformationOptions
     {
