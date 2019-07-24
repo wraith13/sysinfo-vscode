@@ -108,7 +108,7 @@ export module SysInfo
                 getSystemInformation
                 ({
                     categories: [ "basic", "cpu", "memory", "network" ],
-                    withSensitiveData: false,
+                    withSensitiveData: true,
                     withInternalExtensions: false,
                 })
             );
@@ -120,7 +120,14 @@ export module SysInfo
             statusBarItem.hide();
         }
     };
-    const getValue = (object: any, key: string): any => key.split(".").reduce((previous, current) => previous ? previous[current]: previous, object);
+    const getValue = (object: any, key: string): any => key.split(".").reduce
+    (
+        (previous, current) =>
+            (!previous || Object.keys(previous).length <= 0) ?
+                undefined:
+                previous[current],
+        object
+    );
     const developInfomation = (source: string, information: any): string => source
         .replace
         (
