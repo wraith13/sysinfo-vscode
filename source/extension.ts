@@ -120,24 +120,12 @@ export module SysInfo
             statusBarItem.hide();
         }
     };
+    const getValue = (object: any, key: string): any => key.split(".").reduce((previous, current) => previous ? previous[current]: previous, object);
     const developInfomation = (source: string, information: any): string => source
         .replace
         (
             /\$\{([\w\.]+)\}/g,
-            (_match, p1) =>
-            {
-                switch(p1)
-                {
-                case "vscode.version":
-                    return information.vscode.version;
-                case "vscode.env.appName":
-                    return information.vscode.env.appName;
-                case "vscode.env.language":
-                    return information.vscode.env.language;
-                default:
-                    return "ERROR";
-                }
-            }
+            (_match, p1) => getValue(information, p1)
         );
 
     interface GetSystemInformationOptions
