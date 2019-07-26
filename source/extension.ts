@@ -89,7 +89,7 @@ export module SysInfo
             ({
                 alignment: vscode.StatusBarAlignment.Right,
                 command: 'sysinfo-vscode.showSystemInformation',
-                tooltip: localeString("statusbar.show.tooltip")
+                tooltip: 'exec sysinfo-vscode.showSystemInformation'
             }),
 
             //  イベントリスナーの登録
@@ -112,7 +112,9 @@ export module SysInfo
                     withInternalExtensions: false,
                 })
             );
-            statusBarItem.command = getConfiguration<string>("statusBarCommand");
+            const command = getConfiguration<string>("statusBarCommand");
+            statusBarItem.command = command;
+            statusBarItem.tooltip = `exec ${command}`;
             statusBarItem.show();
         }
         else
@@ -120,14 +122,18 @@ export module SysInfo
             statusBarItem.hide();
         }
     };
-    const getValue = (object: any, key: string): any => key.split(".").reduce
-    (
-        (previous, current) =>
-            (!previous || Object.keys(previous).length <= 0) ?
-                undefined:
-                previous[current],
-        object
-    );
+    const getValue = (object: any, key: string): any =>
+    {
+        const value = key.split(".").reduce
+        (
+            (previous, current) =>
+                ("object" === practicalTypeof(previous)) ?
+                    previous[current]:
+                    undefined,
+            object
+        );
+        return 0 <= ["object", "array"].indexOf(practicalTypeof(value)) ? JSON.stringify(value): value;
+    };
     const developInfomation = (source: string, information: any): string => source
         .replace
         (
