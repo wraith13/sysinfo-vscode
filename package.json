@@ -51,7 +51,7 @@
                     },
                     "sysinfo.statusBarLabel": {
                         "type": "string",
-                        "default": "vscode:${vscode.version}",
+                        "default": "$(info) VS Code ${vscode.version}",
                         "description": "%sysinfo-vscode.statusBar.label.description%"
                     },
                     "sysinfo.statusBarCommand": {
