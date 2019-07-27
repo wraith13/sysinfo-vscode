@@ -20,6 +20,8 @@ const localeString = (key: string): string => localeTable[key] || key;
 export module SysInfo
 {
     let statusBarItem : vscode.StatusBarItem;
+    let statusBarItemFullText : string;
+    let baseTick : number;
     const createStatusBarItem =
     (
         properties :
@@ -98,11 +100,39 @@ export module SysInfo
 
         onDidChangeConfiguration();
     };
+    const getCurrentStatusBarItemText = () =>
+    {
+        const maxTextLength = 32;
+        if (statusBarItemFullText.length <= maxTextLength)
+        {
+            return statusBarItemFullText;
+        }
+        else
+        {
+            const firstPauseTime = 5000;
+            const stepTime = 300;
+            const lastPauseTime = 1000;
+            const phase = ((new Date()).getTime() - baseTick) % (firstPauseTime +((statusBarItemFullText.length -maxTextLength) *stepTime) +lastPauseTime);
+            if (phase < firstPauseTime)
+            {
+                return statusBarItemFullText.substr(0, maxTextLength) +"...";
+            }
+            else
+            if (phase < (firstPauseTime +((statusBarItemFullText.length -maxTextLength) *stepTime)))
+            {
+                return "..." +statusBarItemFullText.substr((phase -firstPauseTime) /stepTime, maxTextLength) +"...";
+            }
+            else
+            {
+                return "..." +statusBarItemFullText.substr(-maxTextLength);
+            }
+        }
+    };
     const onDidChangeConfiguration = () : void =>
     {
         if (getConfiguration<boolean>("enabledStatusBar"))
         {
-            statusBarItem.text = developInfomation
+            statusBarItemFullText = developInfomation
             (
                 getConfiguration<string>("statusBarLabel"),
                 getSystemInformation
@@ -112,6 +142,8 @@ export module SysInfo
                     withInternalExtensions: false,
                 })
             );
+            baseTick = (new Date()).getTime();
+            statusBarItem.text = getCurrentStatusBarItemText();
             const command = getConfiguration<string>("statusBarCommand");
             statusBarItem.command = command;
             statusBarItem.tooltip = `exec ${command}`;
