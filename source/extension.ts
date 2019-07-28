@@ -20,8 +20,6 @@ const localeString = (key: string): string => localeTable[key] || key;
 export module SysInfo
 {
     let statusBarItem : vscode.StatusBarItem;
-    let statusBarItemFullText : string;
-    let baseTick : number;
     const createStatusBarItem =
     (
         properties :
@@ -100,31 +98,38 @@ export module SysInfo
 
         onDidChangeConfiguration();
     };
-    const getCurrentStatusBarItemText = () =>
+    let timer : NodeJS.Timer | null = null;
+    const setStatusBarItemText = (statusBarItemText: string, maxTextLength: number) => stepMarquee(statusBarItemText, maxTextLength, 0);
+    const stopMarquee = () =>
     {
-        const maxTextLength = 32;
-        if (statusBarItemFullText.length <= maxTextLength)
+        if (null !== timer)
         {
-            return statusBarItemFullText;
+            clearTimeout(timer);
+        }
+    };
+    const stepMarquee = (statusBarItemText: string, maxTextLength: number, index: number) =>
+    {
+        if (statusBarItemText.length <= maxTextLength)
+        {
+            statusBarItem.text = statusBarItemText;
         }
         else
         {
-            const firstPauseTime = 5000;
-            const stepTime = 300;
-            const lastPauseTime = 1000;
-            const phase = ((new Date()).getTime() - baseTick) % (firstPauseTime +((statusBarItemFullText.length -maxTextLength) *stepTime) +lastPauseTime);
-            if (phase < firstPauseTime)
+            if (index <= 0)
             {
-                return statusBarItemFullText.substr(0, maxTextLength) +"...";
+                statusBarItem.text = statusBarItemText.substr(0, maxTextLength) +"...";
+                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, 1), 5000);
             }
             else
-            if (phase < (firstPauseTime +((statusBarItemFullText.length -maxTextLength) *stepTime)))
+            if ((index +maxTextLength) < statusBarItemText.length)
             {
-                return "..." +statusBarItemFullText.substr((phase -firstPauseTime) /stepTime, maxTextLength) +"...";
+                statusBarItem.text = "..." +statusBarItemText.substr(index, maxTextLength) +"...";
+                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
             }
             else
             {
-                return "..." +statusBarItemFullText.substr(-maxTextLength);
+                statusBarItem.text = "..." +statusBarItemText.substr(-maxTextLength);
+                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, 0), 1000);
             }
         }
     };
@@ -132,18 +137,21 @@ export module SysInfo
     {
         if (getConfiguration<boolean>("enabledStatusBar"))
         {
-            statusBarItemFullText = developInfomation
+            stopMarquee();
+            setStatusBarItemText
             (
-                getConfiguration<string>("statusBarLabel"),
-                getSystemInformation
-                ({
-                    categories: [ "basic", "cpu", "memory", "network" ],
-                    withSensitiveData: true,
-                    withInternalExtensions: false,
-                })
+                developInfomation
+                (
+                    getConfiguration<string>("statusBarLabel"),
+                    getSystemInformation
+                    ({
+                        categories: [ "basic", "cpu", "memory", "network" ],
+                        withSensitiveData: true,
+                        withInternalExtensions: false,
+                    })
+                ),
+                64
             );
-            baseTick = (new Date()).getTime();
-            statusBarItem.text = getCurrentStatusBarItemText();
             const command = getConfiguration<string>("statusBarCommand");
             statusBarItem.command = command;
             statusBarItem.tooltip = `exec ${command}`;
