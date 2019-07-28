@@ -107,9 +107,12 @@ export module SysInfo
             clearTimeout(timer);
         }
     };
+    const lengthWithEscape = (text: string) => text.replace(/\$\(\w*\)/g,"@").length;
+    const substrWithEscape = (text: string, index: number, length?: number) => text.substr(index, length);
     const stepMarquee = (statusBarItemText: string, maxTextLength: number, index: number) =>
     {
-        if (statusBarItemText.length <= maxTextLength)
+        const length = lengthWithEscape(statusBarItemText);
+        if (length <= maxTextLength)
         {
             statusBarItem.text = statusBarItemText;
         }
@@ -117,18 +120,18 @@ export module SysInfo
         {
             if (index <= 0)
             {
-                statusBarItem.text = statusBarItemText.substr(0, maxTextLength) +"...";
+                statusBarItem.text = substrWithEscape(statusBarItemText, 0, maxTextLength) +"...";
                 timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, 1), 5000);
             }
             else
-            if ((index +maxTextLength) < statusBarItemText.length)
+            if ((index +maxTextLength) < length)
             {
-                statusBarItem.text = "..." +statusBarItemText.substr(index, maxTextLength) +"...";
+                statusBarItem.text = "..." +substrWithEscape(statusBarItemText, index, maxTextLength) +"...";
                 timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
             }
             else
             {
-                statusBarItem.text = "..." +statusBarItemText.substr(-maxTextLength);
+                statusBarItem.text = "..." +substrWithEscape(statusBarItemText, -maxTextLength);
                 timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, 0), 1000);
             }
         }
