@@ -107,8 +107,25 @@ export module SysInfo
             clearTimeout(timer);
         }
     };
-    const lengthWithEscape = (text: string) => text.replace(/\$\(\w*\)/g,"@").length;
-    const substrWithEscape = (text: string, index: number, length?: number) => text.substr(index, length);
+    const lengthWithEscape = (text: string) => text.replace(/\$\([\w-]+\)/g,"@").length;
+    const substrWithEscape = (text: string, index: number, length: number) => text.replace
+        (
+            /\$\([\w-]+\)/g,
+            (match, offset) =>
+            {
+                if (offset < index)
+                {
+                    index += (match.length -1);
+                }
+                else
+                if (offset < (index +length))
+                {
+                    length += (match.length -1);
+                }
+                return match;
+            }
+        )
+        .substr(index, length);
     const stepMarquee = (statusBarItemText: string, maxTextLength: number, index: number) =>
     {
         const length = lengthWithEscape(statusBarItemText);
@@ -118,7 +135,8 @@ export module SysInfo
         }
         else
         {
-            if (index <= 0)
+            const separator = "        ";
+            if (index <= 0 || index === (length +separator.length))
             {
                 statusBarItem.text = substrWithEscape(statusBarItemText, 0, maxTextLength) +"...";
                 timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, 1), 5000);
@@ -130,9 +148,21 @@ export module SysInfo
                 timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
             }
             else
+            if ((index +maxTextLength) <= (length +separator.length))
             {
-                statusBarItem.text = "..." +substrWithEscape(statusBarItemText, -maxTextLength);
-                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, 0), 1000);
+                statusBarItem.text = "..." +substrWithEscape(statusBarItemText +separator, index, maxTextLength);
+                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
+            }
+            else
+            if (index < length)
+            {
+                statusBarItem.text = "..." +substrWithEscape(statusBarItemText +separator +statusBarItemText, index, maxTextLength) +"...";
+                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
+            }
+            else
+            {
+                statusBarItem.text = substrWithEscape(separator +statusBarItemText, index -length, maxTextLength) +"...";
+                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
             }
         }
     };
@@ -153,7 +183,7 @@ export module SysInfo
                         withInternalExtensions: false,
                     })
                 ),
-                64
+                48
             );
             const command = getConfiguration<string>("statusBarCommand");
             statusBarItem.command = command;
