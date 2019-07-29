@@ -98,15 +98,6 @@ export module SysInfo
 
         onDidChangeConfiguration();
     };
-    let timer : NodeJS.Timer | null = null;
-    const setStatusBarItemText = (statusBarItemText: string, maxTextLength: number) => stepMarquee(statusBarItemText, maxTextLength, 0);
-    const stopMarquee = () =>
-    {
-        if (null !== timer)
-        {
-            clearTimeout(timer);
-        }
-    };
     const lengthWithEscape = (text: string) => text.replace(/\$\([\w-]+\)/g,"@").length;
     const substrWithEscape = (text: string, index: number, length: number) => text.replace
         (
@@ -126,68 +117,25 @@ export module SysInfo
             }
         )
         .substr(index, length);
-    const stepMarquee = (statusBarItemText: string, maxTextLength: number, index: number) =>
-    {
-        const length = lengthWithEscape(statusBarItemText);
-        if (length <= maxTextLength)
-        {
-            statusBarItem.text = statusBarItemText;
-        }
-        else
-        {
-            const separator = "        ";
-            if (index <= 0 || index === (length +separator.length))
-            {
-                statusBarItem.text = substrWithEscape(statusBarItemText, 0, maxTextLength) +"...";
-                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, 1), 5000);
-            }
-            else
-            if ((index +maxTextLength) < length)
-            {
-                statusBarItem.text = "..." +substrWithEscape(statusBarItemText, index, maxTextLength) +"...";
-                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
-            }
-            else
-            if ((index +maxTextLength) <= (length +separator.length))
-            {
-                statusBarItem.text = "..." +substrWithEscape(statusBarItemText +separator, index, maxTextLength);
-                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
-            }
-            else
-            if (index < length)
-            {
-                statusBarItem.text = "..." +substrWithEscape(statusBarItemText +separator +statusBarItemText, index, maxTextLength) +"...";
-                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
-            }
-            else
-            {
-                statusBarItem.text = substrWithEscape(separator +statusBarItemText, index -length, maxTextLength) +"...";
-                timer = setTimeout(() => stepMarquee(statusBarItemText, maxTextLength, index +1), 200);
-            }
-        }
-    };
+    const clipWithEscape = (text: string, maxTextLength: number) => lengthWithEscape(text) <= maxTextLength ? text: substrWithEscape(text, 0, maxTextLength) +"..."
     const onDidChangeConfiguration = () : void =>
     {
         if (getConfiguration<boolean>("enabledStatusBar"))
         {
-            stopMarquee();
-            setStatusBarItemText
+            const text =developInfomation
             (
-                developInfomation
-                (
-                    getConfiguration<string>("statusBarLabel"),
-                    getSystemInformation
-                    ({
-                        categories: [ "basic", "cpu", "memory", "network" ],
-                        withSensitiveData: true,
-                        withInternalExtensions: false,
-                    })
-                ),
-                48
+                getConfiguration<string>("statusBarLabel"),
+                getSystemInformation
+                ({
+                    categories: [ "basic", "cpu", "memory", "network" ],
+                    withSensitiveData: true,
+                    withInternalExtensions: false,
+                })
             );
-            const command = getConfiguration<string>("statusBarCommand");
-            statusBarItem.command = command;
-            statusBarItem.tooltip = `exec ${command}`;
+            statusBarItem.text = clipWithEscape(text, 48);
+            //const command = getConfiguration<string>("statusBarCommand");
+            //statusBarItem.command = () => vscode.env.clipboard.writeText(text);
+            statusBarItem.tooltip = text;
             statusBarItem.show();
         }
         else
