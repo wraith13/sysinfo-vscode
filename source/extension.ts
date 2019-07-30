@@ -20,6 +20,7 @@ const localeString = (key: string): string => localeTable[key] || key;
 export module SysInfo
 {
     let statusBarItem : vscode.StatusBarItem;
+    let StatusBarText : string = "";
     const createStatusBarItem =
     (
         properties :
@@ -83,6 +84,10 @@ export module SysInfo
             (
                 'sysinfo-vscode.showSystemInformation', showSystemInformation
             ),
+            vscode.commands.registerCommand
+            (
+                'sysinfo-vscode.copyStatusBarText', copyStatusBarText
+            ),
 
             //  ステータスバーアイテムの登録
             statusBarItem = createStatusBarItem
@@ -117,12 +122,12 @@ export module SysInfo
             }
         )
         .substr(index, length);
-    const clipWithEscape = (text: string, maxTextLength: number) => lengthWithEscape(text) <= maxTextLength ? text: substrWithEscape(text, 0, maxTextLength) +"..."
+    const clipWithEscape = (text: string, maxTextLength: number) => lengthWithEscape(text) <= maxTextLength ? text: substrWithEscape(text, 0, maxTextLength) +"...";
     const onDidChangeConfiguration = () : void =>
     {
         if (getConfiguration<boolean>("enabledStatusBar"))
         {
-            const text =developInfomation
+            StatusBarText = developInfomation
             (
                 getConfiguration<string>("statusBarLabel"),
                 getSystemInformation
@@ -132,10 +137,9 @@ export module SysInfo
                     withInternalExtensions: false,
                 })
             );
-            statusBarItem.text = clipWithEscape(text, 48);
-            //const command = getConfiguration<string>("statusBarCommand");
-            //statusBarItem.command = () => vscode.env.clipboard.writeText(text);
-            statusBarItem.tooltip = text;
+            statusBarItem.text = clipWithEscape(StatusBarText, 48);
+            statusBarItem.command = 'sysinfo-vscode.copyStatusBarText';
+            statusBarItem.tooltip = localeString("Click to copy");
             statusBarItem.show();
         }
         else
@@ -143,6 +147,7 @@ export module SysInfo
             statusBarItem.hide();
         }
     };
+    const copyStatusBarText = () => vscode.env.clipboard.writeText(StatusBarText);
     const getValue = (object: any, key: string): any =>
     {
         const value = key.split(".").reduce
@@ -364,7 +369,7 @@ export module SysInfo
         );
         systemLint(information);
         hideInformation(information);
-        const format =  await vscode.window.showQuickPick
+        const format = await vscode.window.showQuickPick
         (
             [
                 {
