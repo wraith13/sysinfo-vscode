@@ -19,6 +19,7 @@ const localeString = (key: string): string => localeTable[key] || key;
 
 export module SysInfo
 {
+    const copyCommandName = 'sysinfo-vscode.copyStatusBarText';
     let statusBarItem : vscode.StatusBarItem;
     let StatusBarText : string = "";
     const createStatusBarItem =
@@ -86,7 +87,7 @@ export module SysInfo
             ),
             vscode.commands.registerCommand
             (
-                'sysinfo-vscode.copyStatusBarText', copyStatusBarText
+                copyCommandName, copyStatusBarText
             ),
 
             //  ステータスバーアイテムの登録
@@ -138,7 +139,7 @@ export module SysInfo
                 })
             );
             statusBarItem.text = clipWithEscape(StatusBarText, 48);
-            statusBarItem.command = 'sysinfo-vscode.copyStatusBarText';
+            statusBarItem.command = copyCommandName;
             statusBarItem.tooltip = localeString("Click to copy");
             statusBarItem.show();
         }

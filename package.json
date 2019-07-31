@@ -54,11 +54,6 @@
                         "default": "$(info) VS Code ${vscode.version}",
                         "description": "%sysinfo-vscode.statusBar.label.description%"
                     },
-                    "sysinfo.statusBarCommand": {
-                        "type": "string",
-                        "default": "sysinfo-vscode.showSystemInformation",
-                        "description": "%sysinfo-vscode.statusBar.command.description%"
-                    },
                     "sysinfo.hideItems": {
                         "type": "array",
                         "items": {
