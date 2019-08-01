@@ -1,7 +1,6 @@
 {
     "sysinfo-vscode.statusBar.enabled.description": "ステータスバー項目の有効/無効",
     "sysinfo-vscode.statusBar.label.description": "ステータスバー項目のラベル",
-    "sysinfo-vscode.statusBar.command.description": "ステータスバー項目のコマンド",
     "sysinfo-vscode.title": "システム情報",
     "sysinfo-vscode.showSystemInformation.title": "表示",
     "sysinfo-vscode.hideItems.description": "隠す項目の一覧 ( README を参照 )",
@@ -12,5 +11,6 @@
     "selectCategories.placeHolder": "カテゴリオプションを選択してください",
     "selectFormat.placeHolder": "形式を選択してください",
     "link.marketplace.label": "marketplace で開く",
-    "link.vscode.label": "VS Code で開く"
+    "link.vscode.label": "VS Code で開く",
+    "Click to copy": "クリックでコピー"
 }

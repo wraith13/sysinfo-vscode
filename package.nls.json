@@ -1,7 +1,6 @@
 {
     "sysinfo-vscode.statusBar.enabled.description": "Enable/Disable status bar item",
     "sysinfo-vscode.statusBar.label.description": "Status bar item's label",
-    "sysinfo-vscode.statusBar.command.description": "Status bar item's command",
     "sysinfo-vscode.title": "System Information",
     "sysinfo-vscode.showSystemInformation.title": "Show",
     "sysinfo-vscode.hideItems.description": "list of hide items ( see README )",
@@ -12,5 +11,6 @@
     "selectCategories.placeHolder": "Select categories option",
     "selectFormat.placeHolder": "Select a format",
     "link.marketplace.label": "open in marketplace",
-    "link.vscode.label": "open in VS Code"
+    "link.vscode.label": "open in VS Code",
+    "Click to copy": "Click to copy"
 }
