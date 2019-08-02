@@ -10,6 +10,10 @@ Show system information ( includes extensions list ) by markdown or JSON for vsc
 
 ![screen shot](./images/screenshot.png)
 
+And show customizable information in status bar.
+
+![status bar item](./images/screenshot2.png)
+
 ## Tutorial
 
 ### 0. ⬇️ Install System Information
@@ -34,6 +38,8 @@ Enjoy!
 
 This extension contributes the following settings by [`settings.json`](https://code.visualstudio.com/docs/customization/userandworkspace#_creating-user-and-workspace-settings)( Mac: <kbd>Command</kbd>+<kbd>,</kbd>, Windows / Linux: <kbd>File</kbd> -> <kbd>Preferences</kbd> -> <kbd>User Settings</kbd> ):
 
+* `sysinfo.enabledStatusBar`: set Enable/Disable status bar item
+* `sysinfo.statusBarLabel`: status bar item's label
 * `sysinfo.hideItems`: set list of hide items
 
 You can hide the specified items. see below example.
@@ -47,6 +53,20 @@ You can hide the specified items. see below example.
     "vscode.extensions.*.packageJSON.description"
 ]
 ```
+
+You can embed icons in the label text( `sysinfo.statusBarLabel` ) by leveraging the syntax:
+
+`My text $(icon-name) contains icons like $(icon'name) this one.`
+
+Where the icon-name is taken from the [octicon](https://octicons.github.com) icon set, e.g. `light-bulb`, `thumbsup`, `zap` etc.
+
+You can specify unicode characters ( include emoji ) as label text too.
+
+### `sysinfo.statusBarLabel` setting examples
+
+* `$(info) VS Code ${vscode.version}` ( default )
+* `$(info) ${vscode.env.appName} ${vscode.version} ${vscode.env.language} ${process.execArgv}`
+* `$(device-desktop) ${os.hostname}`
 
 ## Release Notes
 
