@@ -10,6 +10,10 @@ VS Code のシステム情報(拡張一覧を含む)を markdown あるいは JS
 
 ![screen shot](./images/screenshot.png)
 
+また、ステータスバーでカスタマイズ可能な情報を表示します。
+
+![status bar item](./images/screenshot2.png)
+
 ## チュートリアル
 
 ### 0. ⬇️ システム情報拡張のインストール
@@ -32,6 +36,8 @@ VS Code の拡張サイドバーを出して(Mac:<kbd>Command</kbd>+<kbd>Shift</
 
 [`settings.json`](https://code.visualstudio.com/docs/customization/userandworkspace#_creating-user-and-workspace-settings)( Mac: <kbd>Command</kbd>+<kbd>,</kbd>, Windows / Linux: <kbd>ファイル</kbd> → <kbd>基本設定</kbd> → <kbd>設定</kbd> ) で次の設定ができます。
 
+* `sysinfo.enabledStatusBar`: ステータスバー項目の有効/無効
+* `sysinfo.statusBarLabel`: ステータスバー項目のラベル
 * `sysinfo.hideItems`: 隠す項目の一覧を設定します
 
 指定した項目を隠すことができます。下のサンプルを参照してください。
@@ -45,6 +51,20 @@ VS Code の拡張サイドバーを出して(Mac:<kbd>Command</kbd>+<kbd>Shift</
     "vscode.extensions.*.packageJSON.description"
 ]
 ```
+
+You can embed icons in the label text( `sysinfo.statusBarLabel` ) by leveraging the syntax:
+
+`My text $(icon-name) contains icons like $(icon'name) this one.`
+
+Where the icon-name is taken from the [octicon](https://octicons.github.com) icon set, e.g. `light-bulb`, `thumbsup`, `zap` etc.
+
+You can specify unicode characters ( include emoji ) as label text too.
+
+### `sysinfo.statusBarLabel` 設定サンプル
+
+* `$(info) VS Code ${vscode.version}` ( default )
+* `$(info) ${vscode.env.appName} ${vscode.version} ${vscode.env.language} ${process.execArgv}`
+* `$(device-desktop) ${os.hostname}`
 
 ## リリースノート
 
