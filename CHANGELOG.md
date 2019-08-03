@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.3.0 - 2019-08-04
+
+### Added
+
+- show customizable information in status bar
+
 ## 1.2.3 - 2018-12-30
 
 ### Fixed
