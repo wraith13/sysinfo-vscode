@@ -52,13 +52,13 @@ VS Code の拡張サイドバーを出して(Mac:<kbd>Command</kbd>+<kbd>Shift</
 ]
 ```
 
-You can embed icons in the label text( `sysinfo.statusBarLabel` ) by leveraging the syntax:
+次の構文でラベルのテキストにはアイコンを埋め込む事ができます。
 
-`My text $(icon-name) contains icons like $(icon'name) this one.`
+` $(アイコンの名前) こんな感じで私のテキスト $(icon-name) はアイコンを含める事ができます。`
 
-Where the icon-name is taken from the [octicon](https://octicons.github.com) icon set, e.g. `light-bulb`, `thumbsup`, `zap` etc.
+icon-name は [octicon](https://octicons.github.com) のアイコンセットから選びます。例： `light-bulb`, `thumbsup`, `zap` etc.
 
-You can specify unicode characters ( include emoji ) as label text too.
+あなたは UNICODE 文字 ( 絵文字を含む )をラベルのテキストに指定することもできます。
 
 ### `sysinfo.statusBarLabel` 設定サンプル
 
