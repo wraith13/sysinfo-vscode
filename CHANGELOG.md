@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.3.0 - 2020-02-01
+
+### Security
+
+- `npm audit fix`ed. ( https-proxy-agent v2.2.2 -> v2.2.4 )
+
 ## 1.3.0 - 2019-08-04
 
 ### Added
