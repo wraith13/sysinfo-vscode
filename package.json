@@ -38,6 +38,11 @@
                 "command": "sysinfo-vscode.showSystemInformation",
                 "title": "%sysinfo-vscode.showSystemInformation.title%",
                 "category": "%sysinfo-vscode.title%"
+            },
+            {
+                "command": "sysinfo-vscode.showScheme",
+                "title": "%sysinfo-vscode.showScheme.title%",
+                "category": "%sysinfo-vscode.title%"
             }
         ],
         "configuration": [

@@ -87,6 +87,10 @@ export module SysInfo
             ),
             vscode.commands.registerCommand
             (
+                'sysinfo-vscode.showScheme', showScheme
+            ),
+            vscode.commands.registerCommand
+            (
                 copyCommandName, copyStatusBarText
             ),
 
@@ -534,6 +538,62 @@ export module SysInfo
         ]
         .filter(i => undefined !== i)
         .join("\n");
+    };
+    export const showScheme = async (): Promise<void> =>
+    {
+        const show = async (uri: string) =>
+        {
+            const source = (await vscode.workspace.openTextDocument(vscode.Uri.parse(uri))).getText();
+            const text = JSON.stringify(JSON.parse(source), null, 4);
+            const document = await vscode.workspace.openTextDocument({ language: "json" });
+            const textEditor = await vscode.window.showTextDocument(document);
+            textEditor.edit
+            (
+                (editBuilder: vscode.TextEditorEdit) =>
+                {
+                    editBuilder.insert(new vscode.Position(0,0), text);
+                }
+            );
+        };
+        const schemeList =
+        [
+            "vscode://schemas/settings/default",
+            "vscode://schemas/settings/resourceLanguage",
+            "vscode://schemas/token-styling",
+            "vscode://schemas/textmate-colors",
+            "vscode://schemas/workbench-colors",
+            "vscode://schemas/launch",
+        ];
+        await (
+            await vscode.window.showQuickPick
+            (
+                [{
+                    label: "$(edit) Input a scheme URI to show",
+                    command: async ( ) =>
+                    {
+                        const input = await vscode.window.showInputBox
+                        ({
+                            placeHolder: "Scheme URI"
+                        });
+                        if (undefined !== input)
+                        {
+                            await show(input);
+                        }
+                    }
+                }]
+                .concat
+                (
+                    schemeList.map
+                    (
+                        i =>
+                        ({
+                            label: `$(tag) ${i}`,
+                            command: async ( ) => { await show(i); },
+                        })
+                    )
+                )
+            )
+        )?.command();
     };
 
     //  dummy for test
