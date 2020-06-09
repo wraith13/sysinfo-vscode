@@ -564,36 +564,38 @@ export module SysInfo
             "vscode://schemas/workbench-colors",
             "vscode://schemas/launch",
         ];
-        await (
-            await vscode.window.showQuickPick
-            (
-                [{
-                    label: "$(edit) Input a scheme URI to show",
-                    command: async ( ) =>
+        const result = await vscode.window.showQuickPick
+        (
+            [{
+                label: "$(edit) Input a scheme URI to show",
+                command: async ( ) =>
+                {
+                    const input = await vscode.window.showInputBox
+                    ({
+                        placeHolder: "Scheme URI"
+                    });
+                    if (undefined !== input)
                     {
-                        const input = await vscode.window.showInputBox
-                        ({
-                            placeHolder: "Scheme URI"
-                        });
-                        if (undefined !== input)
-                        {
-                            await show(input);
-                        }
+                        await show(input);
                     }
-                }]
-                .concat
+                }
+            }]
+            .concat
+            (
+                schemeList.map
                 (
-                    schemeList.map
-                    (
-                        i =>
-                        ({
-                            label: `$(tag) ${i}`,
-                            command: async ( ) => { await show(i); },
-                        })
-                    )
+                    i =>
+                    ({
+                        label: `$(tag) ${i}`,
+                        command: async ( ) => { await show(i); },
+                    })
                 )
             )
-        )?.command();
+        );
+        if (result)
+        {
+            result.command();
+        }
     };
 
     //  dummy for test
