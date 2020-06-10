@@ -33,7 +33,7 @@ Enjoy!
 ## Commands
 
 * `System Information: Show` : show system information
-* `System Information: Show Scheme` : show VS Code schemes
+* `System Information: Show Schema` : show VS Code schemas
 
 ## Extension Settings
 

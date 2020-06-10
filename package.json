@@ -40,8 +40,8 @@
                 "category": "%sysinfo-vscode.title%"
             },
             {
-                "command": "sysinfo-vscode.showScheme",
-                "title": "%sysinfo-vscode.showScheme.title%",
+                "command": "sysinfo-vscode.showSchema",
+                "title": "%sysinfo-vscode.showSchema.title%",
                 "category": "%sysinfo-vscode.title%"
             }
         ],

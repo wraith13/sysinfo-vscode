@@ -87,7 +87,7 @@ export module SysInfo
             ),
             vscode.commands.registerCommand
             (
-                'sysinfo-vscode.showScheme', showScheme
+                'sysinfo-vscode.showSchema', showSchema
             ),
             vscode.commands.registerCommand
             (
@@ -539,7 +539,7 @@ export module SysInfo
         .filter(i => undefined !== i)
         .join("\n");
     };
-    export const showScheme = async (): Promise<void> =>
+    export const showSchema = async (): Promise<void> =>
     {
         const show = async (uri: string) =>
         {
@@ -567,7 +567,7 @@ export module SysInfo
         const result = await vscode.window.showQuickPick
         (
             [{
-                label: "$(edit) Input a scheme URI to show",
+                label: `$(edit) ${localeString("Input a scheme URI to show")}`,
                 command: async ( ) =>
                 {
                     const input = await vscode.window.showInputBox

@@ -3,7 +3,7 @@
     "sysinfo-vscode.statusBar.label.description": "ステータスバー項目のラベル",
     "sysinfo-vscode.title": "システム情報",
     "sysinfo-vscode.showSystemInformation.title": "表示",
-    "sysinfo-vscode.showScheme.title": "スキームを表示",
+    "sysinfo-vscode.showSchema.title": "スキームを表示",
     "sysinfo-vscode.hideItems.description": "隠す項目の一覧 ( README を参照 )",
     "W001": "LANG 環境変数が設定されていません。クリップボードに関連した拡張で非ASCIIな文字が正常に機能しません。この問題を避ける為、 VS Code は Terminal.app から起動してください。こちらを参照 <https://github.com/Microsoft/vscode/issues/16261> 。",
     "BasicInfo.label": "基本システム情報 ( Basic System Information )",
@@ -13,5 +13,6 @@
     "selectFormat.placeHolder": "形式を選択してください",
     "link.marketplace.label": "marketplace で開く",
     "link.vscode.label": "VS Code で開く",
-    "Click to copy": "クリックでコピー"
+    "Click to copy": "クリックでコピー",
+    "Input a scheme URI to show": "URI で入力してスキーマを表示"
 }

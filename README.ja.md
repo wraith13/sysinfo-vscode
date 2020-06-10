@@ -31,7 +31,7 @@ VS Code の拡張サイドバーを出して(Mac:<kbd>Command</kbd>+<kbd>Shift</
 ### コマンドリスト
 
 * `System Information: Show` : システム情報を表示します
-* `System Information: Show Scheme` : VS Code の各種スキームを表示します
+* `System Information: Show Schema` : VS Code の各種スキーマを表示します
 
 ## 拡張の設定
 
