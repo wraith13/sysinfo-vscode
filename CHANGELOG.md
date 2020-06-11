@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 2.0.0 - 2020-06-10
+
+### Changed
+
+- `System Information: Show Scheme` Command -> `System Information: Show Schema` Command
+
 ## 1.4.0 - 2020-06-09
 
 ### Added
