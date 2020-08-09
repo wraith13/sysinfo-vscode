@@ -559,10 +559,20 @@ export module SysInfo
         [
             "vscode://schemas/settings/default",
             "vscode://schemas/settings/resourceLanguage",
+            "vscode://schemas/settings/user",
+            "vscode://schemas/settings/machine",
+            "vscode://schemas/settings/folder",
             "vscode://schemas/token-styling",
             "vscode://schemas/textmate-colors",
             "vscode://schemas/workbench-colors",
             "vscode://schemas/launch",
+            "vscode://schemas/keybindings",
+            "vscode://schemas/workspaceConfig",
+            "vscode://schemas/argv",
+            "vscode://schemas/tasks",
+            "vscode://schemas/snippets",
+            "vscode://schemas/global-snippets",
+            "vscode://schemas/extensions",
         ];
         const result = await vscode.window.showQuickPick
         (
