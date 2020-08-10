@@ -573,6 +573,11 @@ export module SysInfo
             "vscode://schemas/snippets",
             "vscode://schemas/global-snippets",
             "vscode://schemas/extensions",
+            "vscode://schemas/vscode-extensions",
+            "vscode://schemas/language-configuration",
+            "vscode://schemas/icon-theme",
+            "vscode://schemas/product-icon-theme",
+            "vscode://schemas/color-theme",
         ];
         const result = await vscode.window.showQuickPick
         (
