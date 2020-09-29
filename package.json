@@ -77,7 +77,9 @@
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@wraith13/vscel": "^0.0.13"
+    },
     "devDependencies": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^6.0.40",
