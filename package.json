@@ -83,7 +83,7 @@
         "@types/node": "^6.0.40",
         "minimist": ">=1.2.3",
         "mocha": "^7.2.0",
-        "typescript": "^3.5.3",
+        "typescript": "^3.8.3",
         "vscode": "^1.1.35"
     }
 }
