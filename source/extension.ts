@@ -3,53 +3,17 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as os from 'os';
+import * as vscel from '@wraith13/vscel';
 
 import localeEn from "../package.nls.json";
 import localeJa from "../package.nls.ja.json";
-
-interface LocaleEntry
-{
-    [key: string]: string;
-}
-const localeTableKey = <string>JSON.parse(<string>process.env.VSCODE_NLS_CONFIG).locale;
-const localeTable = Object.assign(localeEn, ((<{[key: string]: LocaleEntry}>{
-    ja: localeJa
-})[localeTableKey] || { }));
-const localeString = (key: string): string => localeTable[key] || key;
+const locale = vscel.locale.make(localeEn, { "ja": localeJa });
 
 export module SysInfo
 {
     const copyCommandName = 'sysinfo-vscode.copyStatusBarText';
     let statusBarItem : vscode.StatusBarItem;
     let StatusBarText : string = "";
-    const createStatusBarItem =
-    (
-        properties :
-        {
-            alignment ? : vscode.StatusBarAlignment,
-            text ? : string,
-            command ? : string,
-            tooltip ? : string
-        }
-    )
-    : vscode.StatusBarItem =>
-    {
-        const result = vscode.window.createStatusBarItem(properties.alignment);
-        if (undefined !== properties.text)
-        {
-            result.text = properties.text;
-        }
-        if (undefined !== properties.command)
-        {
-            result.command = properties.command;
-        }
-        if (undefined !== properties.tooltip)
-        {
-            result.tooltip = properties.tooltip;
-        }
-        return result;
-    };
-
     const practicalTypeof = (obj: any): string =>
     {
         if (undefined === obj)
@@ -95,7 +59,7 @@ export module SysInfo
             ),
 
             //  ステータスバーアイテムの登録
-            statusBarItem = createStatusBarItem
+            statusBarItem = vscel.statusbar.createItem
             ({
                 alignment: vscode.StatusBarAlignment.Right,
                 command: 'sysinfo-vscode.showSystemInformation',
@@ -144,7 +108,7 @@ export module SysInfo
             );
             statusBarItem.text = clipWithEscape(StatusBarText, 48);
             statusBarItem.command = copyCommandName;
-            statusBarItem.tooltip = localeString("Click to copy");
+            statusBarItem.tooltip = locale.map("Click to copy");
             statusBarItem.show();
         }
         else
@@ -266,7 +230,7 @@ export module SysInfo
         if ("darwin" === information["os"]["platform"] && undefined === information["process"]["env"]["LANG"])
         {
             information["warnings"] = information["warnings"] || { };
-            information["warnings"]["W001"] = localeString("W001");
+            information["warnings"]["W001"] = locale.map("W001");
         }
         return information;
     };
@@ -344,18 +308,18 @@ export module SysInfo
         (
             [
                 {
-                    "label": localeString("BasicInfo.label"),
+                    "label": locale.map("BasicInfo.label"),
                     "description": "",
                     "detail": "basic, extensions"
                 },
                 {
-                    "label": localeString("FullInfo.label"),
-                    "description": localeString("FullInfo.description"),
+                    "label": locale.map("FullInfo.label"),
+                    "description": locale.map("FullInfo.description"),
                     "detail": "basic, cpu, memory, network, extensions"
                 }
             ],
             {
-                placeHolder: localeString("selectCategories.placeHolder"),
+                placeHolder: locale.map("selectCategories.placeHolder"),
             }
         );
         if (!selectedCategories)
@@ -363,7 +327,7 @@ export module SysInfo
             return;
         }
         const categories = (selectedCategories.detail || "").split(",").map(i => i.trim());
-        const isFull = selectedCategories.label === localeString("FullInfo.label");
+        const isFull = selectedCategories.label === locale.map("FullInfo.label");
         const information = getSystemInformation
         (
             {
@@ -389,7 +353,7 @@ export module SysInfo
                 }
             ],
             {
-                placeHolder: localeString("selectFormat.placeHolder"),
+                placeHolder: locale.map("selectFormat.placeHolder"),
             }
         );
         if (!format)
@@ -435,8 +399,8 @@ export module SysInfo
 
         const extensionLinks = (isExtensionData && data && data.id && !isInternalExtension(data)) ?
             [
-                `- [${localeString("link.marketplace.label")}](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
-                `- [${localeString("link.vscode.label")}](vscode:extension/${data.id})\n`
+                `- [${locale.map("link.marketplace.label")}](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
+                `- [${locale.map("link.vscode.label")}](vscode:extension/${data.id})\n`
             ]
             .join(""):
             undefined;
@@ -585,7 +549,7 @@ export module SysInfo
         const result = await vscode.window.showQuickPick
         (
             [{
-                label: `$(edit) ${localeString("Input a scheme URI to show")}`,
+                label: `$(edit) ${locale.map("Input a scheme URI to show")}`,
                 command: async ( ) =>
                 {
                     const input = await vscode.window.showInputBox
