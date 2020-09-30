@@ -4,13 +4,20 @@
 import * as vscode from 'vscode';
 import * as os from 'os';
 import * as vscel from '@wraith13/vscel';
-
+import packageJson from "../package.json";
 import localeEn from "../package.nls.json";
 import localeJa from "../package.nls.ja.json";
 const locale = vscel.locale.make(localeEn, { "ja": localeJa });
 
 export module SysInfo
 {
+    module Config
+    {
+        export const root = vscel.config.makeRoot(packageJson);
+        export const enabledStatusBar = root.makeEntry<boolean>("sysinfo.enabledStatusBar");
+        export const hideItems = root.makeEntry<string[]>("sysinfo.hideItems");
+        export const statusBarLabel = root.makeEntry<string>("sysinfo.statusBarLabel");
+    }
     const copyCommandName = 'sysinfo-vscode.copyStatusBarText';
     let statusBarItem : vscode.StatusBarItem;
     let StatusBarText : string = "";
@@ -31,15 +38,6 @@ export module SysInfo
 
         return typeof obj;
     };
-
-    const getConfiguration = <type>(key?: string, section: string = "sysinfo"): type =>
-    {
-        const configuration = vscode.workspace.getConfiguration(section);
-        return key ?
-            configuration[key]:
-            configuration;
-    };
-
     export const initialize = (context: vscode.ExtensionContext): void =>
     {
         context.subscriptions.push
@@ -67,7 +65,17 @@ export module SysInfo
             }),
 
             //  イベントリスナーの登録
-            vscode.workspace.onDidChangeConfiguration(() => onDidChangeConfiguration())
+            vscode.workspace.onDidChangeConfiguration
+            (
+                event =>
+                {
+                    if (event.affectsConfiguration("sysinfo"))
+                    {
+                        Config.root.entries.forEach(i => i.clear());
+                        onDidChangeConfiguration();
+                    }
+                }
+            )
         );
 
         onDidChangeConfiguration();
@@ -94,11 +102,11 @@ export module SysInfo
     const clipWithEscape = (text: string, maxTextLength: number) => lengthWithEscape(text) <= maxTextLength ? text: substrWithEscape(text, 0, maxTextLength) +"...";
     const onDidChangeConfiguration = () : void =>
     {
-        if (getConfiguration<boolean>("enabledStatusBar"))
+        if (Config.enabledStatusBar.get(""))
         {
             StatusBarText = developInfomation
             (
-                getConfiguration<string>("statusBarLabel"),
+                Config.statusBarLabel.get(""),
                 getSystemInformation
                 ({
                     categories: [ "basic", "cpu", "memory", "network" ],
@@ -236,7 +244,7 @@ export module SysInfo
     };
     export const hideInformation = (information: any): any =>
     {
-        getConfiguration<string[]>("hideItems").forEach
+        Config.hideItems.get("").forEach
         (
             path =>
             {
