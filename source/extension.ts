@@ -1,14 +1,11 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as os from 'os';
 import * as vscel from '@wraith13/vscel';
 import packageJson from "../package.json";
 import localeEn from "../package.nls.json";
 import localeJa from "../package.nls.ja.json";
-const locale = vscel.locale.make(localeEn, { "ja": localeJa });
-
+const locale = vscel.locale.make(localeEn, { "ja": localeJa, });
 export module SysInfo
 {
     module Config
@@ -35,7 +32,6 @@ export module SysInfo
         {
             return "array";
         }
-
         return typeof obj;
     };
     export const initialize = (context: vscode.ExtensionContext): void =>
@@ -55,7 +51,6 @@ export module SysInfo
             (
                 copyCommandName, copyStatusBarText
             ),
-
             //  ステータスバーアイテムの登録
             statusBarItem = vscel.statusbar.createItem
             ({
@@ -63,7 +58,6 @@ export module SysInfo
                 command: 'sysinfo-vscode.showSystemInformation',
                 tooltip: 'exec sysinfo-vscode.showSystemInformation'
             }),
-
             //  イベントリスナーの登録
             vscode.workspace.onDidChangeConfiguration
             (
@@ -77,7 +71,6 @@ export module SysInfo
                 }
             )
         );
-
         onDidChangeConfiguration();
     };
     const lengthWithEscape = (text: string) => text.replace(/\$\([\w-]+\)/g,"@").length;
@@ -143,14 +136,12 @@ export module SysInfo
             /\$\{([\w\.]+)\}/g,
             (_match, p1) => getValue(information, p1)
         );
-
     interface GetSystemInformationOptions
     {
         categories: string[];
         withSensitiveData: boolean;
         withInternalExtensions: boolean;
     }
-
     export const getSystemInformation = (options: GetSystemInformationOptions): object =>
     {
         const thisExtension = vscode.extensions.getExtension("wraith13.sysinfo-vscode");
@@ -209,7 +200,6 @@ export module SysInfo
         id: string;
     }
     const isInternalExtension = (extension: Extension): boolean => extension.id.startsWith("vscode.");
-
     export const getExtentionsformation = (options: GetSystemInformationOptions): object =>
     {
         return vscode.extensions.all
@@ -286,10 +276,8 @@ export module SysInfo
         );
         return information;
     };
-
     const openNewTextDocument = async (language: string): Promise<vscode.TextDocument> =>
         await vscode.workspace.openTextDocument({ language });
-
     const showQuickPick = async (
         items: vscode.QuickPickItem[],
         options: vscode.QuickPickOptions,
@@ -297,7 +285,6 @@ export module SysInfo
     ): Promise<vscode.QuickPickItem|undefined> => undefined === autoSelectedIndex ?
             await vscode.window.showQuickPick(items, options):
             items[autoSelectedIndex];
-
     const openNewCodeDocument = async (language: string, code: string): Promise<void> =>
     {
         const document = await openNewTextDocument(language);
@@ -376,10 +363,8 @@ export module SysInfo
                 informationToMarkdown(information)
         );
     };
-
     const escapeMarkdown = (text: string): string => text.replace(/\\/g, "\\\\");
     const makeMarkdownHeader =(level: number, title: string): string => `${"#".repeat(level)} ${escapeMarkdown(title)}\n`;
-
     const makeMarkdownTable = (data: [{key:string,value:any}]): string =>
     {
         return [
@@ -404,7 +389,6 @@ export module SysInfo
         {
             return undefined;
         }
-
         const extensionLinks = (isExtensionData && data && data.id && !isInternalExtension(data)) ?
             [
                 `- [${locale.map("link.marketplace.label")}](https://marketplace.visualstudio.com/items?itemName=${data.id})\n`,
@@ -412,7 +396,6 @@ export module SysInfo
             ]
             .join(""):
             undefined;
-
         const tableItems: [{key:string,value:any}] = <any>[];
         const arrayItems: [{key:string,value:[any]}] = <any>[];
         const subTables: [{key:string,value:any}] = <any>[];
@@ -459,7 +442,6 @@ export module SysInfo
                     }
                 );
         }
-
         return [
             title ? makeMarkdownHeader(level, title): undefined,
             extensionLinks,
@@ -587,7 +569,6 @@ export module SysInfo
             result.command();
         }
     };
-
     //  dummy for test
     export const roundZoom = (value: number): number =>
     {
@@ -595,12 +576,5 @@ export module SysInfo
         return Math.round(value *cent) /cent;
     };
 }
-
-export function activate(context: vscode.ExtensionContext): void
-{
-    SysInfo.initialize(context);
-}
-
-export function deactivate(): void
-{
-}
+export const activate = (context: vscode.ExtensionContext) => SysInfo.initialize(context);
+export const deactivate = () => { };
