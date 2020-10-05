@@ -333,7 +333,7 @@ export module SysInfo
         );
         systemLint(information);
         hideInformation(information);
-        const format = await vscode.window.showQuickPick
+        await vscel.menu.showQuickPick
         (
             [
                 {
@@ -349,18 +349,14 @@ export module SysInfo
             ],
             {
                 placeHolder: locale.map("selectFormat.placeHolder"),
+                command: async format => await openNewCodeDocument
+                (
+                    format.detail,
+                    "json" === format.detail ?
+                        JSON.stringify(information, null, 4):
+                        informationToMarkdown(information)
+                )
             }
-        );
-        if (!format)
-        {
-            return;
-        }
-        await openNewCodeDocument
-        (
-            format.detail,
-            "json" === format.detail ?
-                JSON.stringify(information, null, 4):
-                informationToMarkdown(information)
         );
     };
     const escapeMarkdown = (text: string): string => text.replace(/\\/g, "\\\\");
