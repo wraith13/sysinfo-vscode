@@ -532,7 +532,7 @@ export module SysInfo
             "vscode://schemas/workbench-colors",
             "vscode://schemas/workspaceConfig",
         ];
-        const result = await vscode.window.showQuickPick
+        await vscel.menu.showQuickPick
         (
             [{
                 label: `$(edit) ${locale.map("Input a scheme URI to show")}`,
@@ -560,10 +560,6 @@ export module SysInfo
                 )
             )
         );
-        if (result)
-        {
-            result.command();
-        }
     };
     //  dummy for test
     export const roundZoom = (value: number): number =>
