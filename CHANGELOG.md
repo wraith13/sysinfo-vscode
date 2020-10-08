@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 2.4.1 - 2020-10-09
+
+### Changed
+
+- Refactoring. ( The behavior does not change. )
+
 ## 2.4.0 - 2020-09-14
 
 ### Added
