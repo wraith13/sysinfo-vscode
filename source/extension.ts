@@ -536,17 +536,11 @@ export module SysInfo
         (
             [{
                 label: `$(edit) ${locale.map("Input a scheme URI to show")}`,
-                command: async ( ) =>
-                {
-                    const input = await vscode.window.showInputBox
-                    ({
-                        placeHolder: "Scheme URI"
-                    });
-                    if (undefined !== input)
-                    {
-                        await show(input);
-                    }
-                }
+                command: async ( ): Promise<unknown> => await vscel.menu.showInputBox
+                ({
+                    placeHolder: "Scheme URI",
+                    command: async input => await show(input)
+                }),
             }]
             .concat
             (
@@ -555,7 +549,7 @@ export module SysInfo
                     i =>
                     ({
                         label: `$(tag) ${i}`,
-                        command: async ( ) => { await show(i); },
+                        command: async ( ) => await show(i),
                     })
                 )
             )
