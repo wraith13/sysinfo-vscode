@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 2.?.? - 202?-??-??
+
+### Security
+
+- `npm audit fix`ed.
+
 ## 2.4.1 - 2020-10-09
 
 ### Changed
