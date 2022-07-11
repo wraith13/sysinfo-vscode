@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 2.4.3 - 2022-07-12
+
+### Changed
+
+- `activationEvents`: `*` -> `onStartupFinished`
+
 ## 2.4.2 - 2022-07-12
 
 ### Added
