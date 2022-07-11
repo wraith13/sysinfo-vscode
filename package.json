@@ -3,7 +3,7 @@
     "displayName": "System Information",
     "description": "Show system information ( includes extensions list ) by markdown or JSON for VS Code",
     "icon": "images/infohex.128.png",
-    "version": "2.4.1",
+    "version": "2.4.2",
     "publisher": "wraith13",
     "readme": "README.md",
     "license": "SEE LICENSE IN LICENSE_1_0.txt",

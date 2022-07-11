@@ -80,3 +80,17 @@ see ChangLog on [marketplace](https://marketplace.visualstudio.com/items/wraith1
 ## License
 
 [Boost Software License](https://github.com/wraith13/sysinfo-vscode/blob/master/LICENSE_1_0.txt)
+
+## Download VSIX file ( for VS Code compatible softwares )
+
+[Releases · wraith13/sysinfo-vscode](https://github.com/wraith13/sysinfo-vscode/releases)
+
+## Other extensions of wraith13's work
+
+|Icon|Name|Description|
+|---|---|---|
+|![](https://wraith13.gallerycdn.vsassets.io/extensions/wraith13/bracket-lens/1.0.0/1603272166087/Microsoft.VisualStudio.Services.Icons.Default) |[Bracket Lens](https://marketplace.visualstudio.com/items?itemName=wraith13.bracket-lens)|Show bracket header on closing bracket.|
+|![](https://wraith13.gallerycdn.vsassets.io/extensions/wraith13/background-phi-colors/3.1.0/1581619161244/Microsoft.VisualStudio.Services.Icons.Default) |[Background Phi Colors](https://marketplace.visualstudio.com/items?itemName=wraith13.background-phi-colors)|This extension colors the background in various ways.|
+|![](https://wraith13.gallerycdn.vsassets.io/extensions/wraith13/blitz/1.6.0/1598232590017/Microsoft.VisualStudio.Services.Icons.Default) |[Blitz](https://marketplace.visualstudio.com/items?itemName=wraith13.blitz)|Provide a quick and comfortable way to change settings by quick pick based UI.|
+
+See all wraith13's  expansions: <https://marketplace.visualstudio.com/publishers/wraith13>

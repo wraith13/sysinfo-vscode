@@ -4,7 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## 2.?.? - 202?-??-??
+## 2.4.2 - 2022-07-12
+
+### Added
+
+- Also released on [github.com](https://github.com/wraith13/sysinfo-vscode/releases)
+- VSIX download link in README.md
 
 ### Security
 
