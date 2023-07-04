@@ -57,7 +57,7 @@ VS Code の拡張サイドバーを出して(Mac:<kbd>Command</kbd>+<kbd>Shift</
 
 ` $(アイコンの名前) こんな感じで私のテキスト $(icon-name) はアイコンを含める事ができます。`
 
-icon-name は [octicon](https://octicons.github.com) のアイコンセットから選びます。例： `light-bulb`, `thumbsup`, `zap` etc.
+icon-name は [codicons](https://microsoft.github.io/vscode-codicons/dist/codicon.html) のアイコンセットから選びます。例： `light-bulb`, `thumbsup`, `zap` etc.
 
 あなたは UNICODE 文字 ( 絵文字を含む )をラベルのテキストに指定することもできます。
 

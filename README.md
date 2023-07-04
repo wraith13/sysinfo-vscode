@@ -59,7 +59,7 @@ You can embed icons in the label text( `sysinfo.statusBarLabel` ) by leveraging 
 
 `My text $(icon-name) contains icons like $(icon'name) this one.`
 
-Where the icon-name is taken from the [octicon](https://octicons.github.com) icon set, e.g. `light-bulb`, `thumbsup`, `zap` etc.
+Where the icon-name is taken from the [codicons](https://microsoft.github.io/vscode-codicons/dist/codicon.html) icon set, e.g. `light-bulb`, `thumbsup`, `zap` etc.
 
 You can specify unicode characters ( include emoji ) as label text too.
 
