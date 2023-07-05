@@ -66,6 +66,8 @@ icon-name は [codicons](https://microsoft.github.io/vscode-codicons/dist/codico
 * `$(info) VS Code ${vscode.version}` ( default )
 * `$(info) ${vscode.env.appName} ${vscode.version} ${vscode.env.language} ${process.execArgv}`
 * `$(device-desktop) ${os.hostname}`
+* `$(symbol-color) ${settings:workbench.colorTheme}`
+* `$(text-size) ${settings:editor.fontSize}`
 
 ## リリースノート
 

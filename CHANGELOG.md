@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## 2.5.0 - 2023-07-??
 
+### Added
+
+- Support for configuration information in `sysinfo.statusBarLabel`. [#8](https://github.com/wraith13/sysinfo-vscode/issues/8)
+
 ### Security
 
 - `npm audit fix`ed.

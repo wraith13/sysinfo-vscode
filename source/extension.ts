@@ -63,15 +63,36 @@ export module SysInfo
             (
                 event =>
                 {
-                    if (event.affectsConfiguration("sysinfo"))
+                    if
+                    (
+                        event.affectsConfiguration("sysinfo") ||
+                        (
+                            Config.enabledStatusBar.get("") &&
+                            hasSettingKey(Config.statusBarLabel.get(""))
+                        )
+                    )
                     {
                         Config.root.entries.forEach(i => i.clear());
-                        onDidChangeConfiguration();
+                        updateStatusBar();
                     }
                 }
-            )
+            ),
+            vscode.window.onDidChangeActiveTextEditor
+            (
+                _event =>
+                {
+                    if
+                    (
+                        Config.enabledStatusBar.get("") &&
+                        hasSettingKey(Config.statusBarLabel.get(""))
+                    )
+                    {
+                        updateStatusBar();
+                    }
+                }
+            ),
         );
-        onDidChangeConfiguration();
+        updateStatusBar();
     };
     const lengthWithEscape = (text: string) => text.replace(/\$\([\w-]+\)/g,"@").length;
     const substrWithEscape = (text: string, index: number, length: number) => text.replace
@@ -93,7 +114,7 @@ export module SysInfo
         )
         .substr(index, length);
     const clipWithEscape = (text: string, maxTextLength: number) => lengthWithEscape(text) <= maxTextLength ? text: substrWithEscape(text, 0, maxTextLength) +"...";
-    const onDidChangeConfiguration = () : void =>
+    const updateStatusBar = () : void =>
     {
         if (Config.enabledStatusBar.get(""))
         {
@@ -118,22 +139,33 @@ export module SysInfo
         }
     };
     const copyStatusBarText = () => vscode.env.clipboard.writeText(StatusBarText);
+    const settingsKeyHeader = "settings:";
+    const isSettingKey = (key: string) => key.startsWith(settingsKeyHeader);
+    const hasSettingKey = (source: string) => source.includes(settingsKeyHeader);
+    const getSettingValue = (key: string) => vscode.workspace.getConfiguration
+    (
+        undefined,
+        vscode.window.activeTextEditor?.document ?? vscode.workspace.workspaceFolders?.[0]
+    ).get(key.split(settingsKeyHeader)[1]);
+    const getObjectValue = (object: any, key: string): any => key.split(".").reduce
+    (
+        (previous, current) =>
+            ("object" === practicalTypeof(previous)) ?
+                previous[current]:
+                undefined,
+        object
+    );
     const getValue = (object: any, key: string): any =>
     {
-        const value = key.split(".").reduce
-        (
-            (previous, current) =>
-                ("object" === practicalTypeof(previous)) ?
-                    previous[current]:
-                    undefined,
-            object
-        );
+        const value = isSettingKey(key) ?
+            getSettingValue(key):
+            getObjectValue(object, key);
         return 0 <= ["object", "array"].indexOf(practicalTypeof(value)) ? JSON.stringify(value): value;
     };
     const developInfomation = (source: string, information: any): string => source
         .replace
         (
-            /\$\{([\w\.]+)\}/g,
+            /\$\{([\w\.\:\-]+)\}/g,
             (_match, p1) => getValue(information, p1)
         );
     interface GetSystemInformationOptions

@@ -68,6 +68,8 @@ You can specify unicode characters ( include emoji ) as label text too.
 * `$(info) VS Code ${vscode.version}` ( default )
 * `$(info) ${vscode.env.appName} ${vscode.version} ${vscode.env.language} ${process.execArgv}`
 * `$(device-desktop) ${os.hostname}`
+* `$(symbol-color) ${settings:workbench.colorTheme}`
+* `$(text-size) ${settings:editor.fontSize}`
 
 ## Release Notes
 
