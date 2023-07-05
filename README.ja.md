@@ -1,7 +1,5 @@
 # システム情報 README ( [🇬🇧 English](https://github.com/wraith13/sysinfo-vscode/blob/master/README.md) )
 
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/wraith13.sysinfo-vscode.svg) ![installs](https://vsmarketplacebadge.apphb.com/installs/wraith13.sysinfo-vscode.svg) ![rating](https://vsmarketplacebadge.apphb.com/rating/wraith13.sysinfo-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=wraith13.sysinfo-vscode)
-
 VS Code のシステム情報(拡張一覧を含む)を markdown あるいは JSON で表示します。
 
 ## 機能

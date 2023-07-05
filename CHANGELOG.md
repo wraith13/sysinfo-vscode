@@ -4,6 +4,12 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 2.5.1 - 2023-07-05
+
+### Removed
+
+- VSMarketplaceBadges in README.md. ( To avoid an issue where updates cannot be released to the marketplace due to a VSMarketplaceBadges server failure. )
+
 ## 2.5.0 - 2023-07-05
 
 ### Added
