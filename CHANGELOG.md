@@ -4,6 +4,16 @@ All notable changes to the "sysinfo-vscode" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 2.6.0 - 2023-07-??
+
+### Added
+
+- Support multiple(array) specification in `sysinfo.statusBarLabel` configuration
+- `sysinfo.statusBarSwitchInterval` configuration
+- `sysinfo.statusBarCommand` configuration
+- `System Information: Copy Status bar Text` Command
+- `System Information: Switch Status bar Label` Command
+
 ## 2.5.1 - 2023-07-05
 
 ### Removed

@@ -43,6 +43,16 @@
                 "command": "sysinfo-vscode.showSchema",
                 "title": "%sysinfo-vscode.showSchema.title%",
                 "category": "%sysinfo-vscode.title%"
+            },
+            {
+                "command": "sysinfo-vscode.copyStatusBarText",
+                "title": "%sysinfo-vscode.copyStatusBarText.title%",
+                "category": "%sysinfo-vscode.title%"
+            },
+            {
+                "command": "sysinfo-vscode.switchStatusBarLabel",
+                "title": "%sysinfo-vscode.switchStatusBarLabel.title%",
+                "category": "%sysinfo-vscode.title%"
             }
         ],
         "configuration": [
@@ -55,9 +65,28 @@
                         "description": "%sysinfo-vscode.statusBar.enabled.description%"
                     },
                     "sysinfo.statusBarLabel": {
+                        "type": [ "string", "array"],
+                        "default": [
+                            "$(info) VS Code ${vscode.version}",
+                            "$(device-desktop) ${os.hostname}",
+                            "$(symbol-color) ${settings:workbench.colorTheme}"
+                        ],
+                        "description": "%sysinfo-vscode.statusBar.label.description%",
+                        "items":
+                        {
+                            "type": "string"
+                        }
+                    },
+                    "sysinfo.statusBarSwitchInterval": {
+                        "type": "number",
+                        "default": 0,
+                        "description": "%sysinfo-vscode.statusBar.SwitchInterval.description%",
+                        "minimum": 0
+                    },
+                    "sysinfo.statusBarCommand": {
                         "type": "string",
-                        "default": "$(info) VS Code ${vscode.version}",
-                        "description": "%sysinfo-vscode.statusBar.label.description%"
+                        "default": "sysinfo-vscode.switchStatusBarLabel",
+                        "description": "%sysinfo-vscode.statusBar.command.description%"
                     },
                     "sysinfo.hideItems": {
                         "type": "array",
@@ -80,7 +109,7 @@
         "test": "node ./out/test/runTest.js"
     },
     "dependencies": {
-        "@wraith13/vscel": "^0.0.19"
+        "@wraith13/vscel": "^0.0.54"
     },
     "devDependencies": {
         "@types/glob": "^7.1.1",

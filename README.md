@@ -32,13 +32,17 @@ Enjoy!
 
 * `System Information: Show` : show system information
 * `System Information: Show Schema` : show VS Code schemas
+* `System Information: Copy Status bar Text` : copy status bar text
+* `System Information: Switch Status bar Label` : switch status bar label
 
 ## Extension Settings
 
 This extension contributes the following settings by [`settings.json`](https://code.visualstudio.com/docs/customization/userandworkspace#_creating-user-and-workspace-settings)( Mac: <kbd>Command</kbd>+<kbd>,</kbd>, Windows / Linux: <kbd>File</kbd> -> <kbd>Preferences</kbd> -> <kbd>User Settings</kbd> ):
 
 * `sysinfo.enabledStatusBar`: set Enable/Disable status bar item
-* `sysinfo.statusBarLabel`: status bar item's label
+* `sysinfo.statusBarLabel`: status bar item's label ( You can also specify multiple in an array. )
+* `sysinfo.statusBarSwitchInterval`: status bar item's switch interval(ms)
+* `sysinfo.statusBarCommand`: status bar item's command on click ( Other commands can be set as well, but assume "sysinfo-vscode.switchStatusBarLabel" or "sysinfo-vscode.copyStatusBarText" is set. )
 * `sysinfo.hideItems`: set list of hide items
 
 You can hide the specified items. see below example.
@@ -68,6 +72,8 @@ You can specify unicode characters ( include emoji ) as label text too.
 * `$(device-desktop) ${os.hostname}`
 * `$(symbol-color) ${settings:workbench.colorTheme}`
 * `$(text-size) ${settings:editor.fontSize}`
+
+You can also specify multiple in an array.
 
 ## Release Notes
 

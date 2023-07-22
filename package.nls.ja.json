@@ -1,9 +1,13 @@
 {
     "sysinfo-vscode.statusBar.enabled.description": "ステータスバー項目の有効/無効",
     "sysinfo-vscode.statusBar.label.description": "ステータスバー項目のラベル",
+    "sysinfo-vscode.statusBar.SwitchInterval.description": "ステータスバー項目の切り替え間隔(ms)",
+    "sysinfo-vscode.statusBar.command.description": "ステータスバー項目のクリックコマンド ( 他のコマンドも設定できますが、 \"sysinfo-vscode.switchStatusBarLabel\" あるいは \"sysinfo-vscode.copyStatusBarText\" が設定される事を前提としています。 )",
     "sysinfo-vscode.title": "システム情報",
     "sysinfo-vscode.showSystemInformation.title": "表示",
     "sysinfo-vscode.showSchema.title": "スキームを表示",
+    "sysinfo-vscode.copyStatusBarText.title": "ステータスバーテキストをコピー",
+    "sysinfo-vscode.switchStatusBarLabel.title": "ステータスバーラベルを切り替え",
     "sysinfo-vscode.hideItems.description": "隠す項目の一覧 ( README を参照 )",
     "W001": "LANG 環境変数が設定されていません。クリップボードに関連した拡張で非ASCIIな文字が正常に機能しません。この問題を避ける為、 VS Code は Terminal.app から起動してください。こちらを参照 <https://github.com/Microsoft/vscode/issues/16261> 。",
     "BasicInfo.label": "基本システム情報 ( Basic System Information )",
@@ -14,5 +18,7 @@
     "link.marketplace.label": "marketplace で開く",
     "link.vscode.label": "VS Code で開く",
     "Click to copy": "クリックでコピー",
+    "Click to switch": "クリックで切り替え",
+    "Click to execute": "クリックで実行",
     "Input a scheme URI to show": "URI で入力してスキーマを表示"
 }

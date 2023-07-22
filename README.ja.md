@@ -30,13 +30,17 @@ VS Code の拡張サイドバーを出して(Mac:<kbd>Command</kbd>+<kbd>Shift</
 
 * `System Information: Show` : システム情報を表示します
 * `System Information: Show Schema` : VS Code の各種スキーマを表示します
+* `System Information: Copy Status bar Text` : ステータスバーテキストをコピーします
+* `System Information: Switch Status bar Label` : ステータスバーラベルを切り替えます
 
 ## 拡張の設定
 
 [`settings.json`](https://code.visualstudio.com/docs/customization/userandworkspace#_creating-user-and-workspace-settings)( Mac: <kbd>Command</kbd>+<kbd>,</kbd>, Windows / Linux: <kbd>ファイル</kbd> → <kbd>基本設定</kbd> → <kbd>設定</kbd> ) で次の設定ができます。
 
 * `sysinfo.enabledStatusBar`: ステータスバー項目の有効/無効
-* `sysinfo.statusBarLabel`: ステータスバー項目のラベル
+* `sysinfo.statusBarLabel`: ステータスバー項目のラベル ( 配列で複数指定する事もできます。 )
+* `sysinfo.statusBarSwitchInterval`: ステータスバー項目の切り替え間隔(ms)
+* `sysinfo.statusBarCommand`: ステータスバー項目のクリックコマンド ( 他のコマンドも設定できますが、 "sysinfo-vscode.switchStatusBarLabel" あるいは "sysinfo-vscode.copyStatusBarText" が設定される事を前提としています。 )
 * `sysinfo.hideItems`: 隠す項目の一覧を設定します
 
 指定した項目を隠すことができます。下のサンプルを参照してください。
@@ -66,6 +70,8 @@ icon-name は [codicons](https://microsoft.github.io/vscode-codicons/dist/codico
 * `$(device-desktop) ${os.hostname}`
 * `$(symbol-color) ${settings:workbench.colorTheme}`
 * `$(text-size) ${settings:editor.fontSize}`
+
+配列で複数指定する事もできます。
 
 ## リリースノート
 

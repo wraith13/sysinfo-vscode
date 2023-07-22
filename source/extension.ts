@@ -11,13 +11,22 @@ export module SysInfo
     module Config
     {
         export const root = vscel.config.makeRoot(packageJson);
-        export const enabledStatusBar = root.makeEntry<boolean>("sysinfo.enabledStatusBar");
-        export const hideItems = root.makeEntry<string[]>("sysinfo.hideItems");
-        export const statusBarLabel = root.makeEntry<string>("sysinfo.statusBarLabel");
+        export const enabledStatusBar = root.makeEntry<boolean>("sysinfo.enabledStatusBar", "root-workspace");
+        export const hideItems = root.makeEntry<string[]>("sysinfo.hideItems", "root-workspace");
+        export const statusBarLabel = root.makeEntry<string | []>("sysinfo.statusBarLabel", "root-workspace");
+        export const statusBarSwitchInterval = root.makeEntry<number>("sysinfo.statusBarSwitchInterval", "root-workspace");
+        export const statusBarCommand = root.makeEntry<string>("sysinfo.statusBarCommand", "root-workspace");
     }
     const copyCommandName = 'sysinfo-vscode.copyStatusBarText';
-    let statusBarItem : vscode.StatusBarItem;
-    let StatusBarText : string = "";
+    const switchCommandName = 'sysinfo-vscode.switchStatusBarLabel';
+    let statusBarItem: vscode.StatusBarItem;
+    let statusBarText: string = "";
+    let statusBarTextIndex: number = 0;
+    let statusBarSwitchInterval: NodeJS.Timeout | undefined;
+    const stringOrJoin = (text: string | string[], separator: string = " ") =>
+        Array.isArray(text) ? text.join(separator): text;
+    const stringOrAt = (text: string | string[], index: number) =>
+        Array.isArray(text) ? text[index % text.length]: text;
     const practicalTypeof = (obj: any): string =>
     {
         if (undefined === obj)
@@ -51,6 +60,10 @@ export module SysInfo
             (
                 copyCommandName, copyStatusBarText
             ),
+            vscode.commands.registerCommand
+            (
+                switchCommandName, switchStatusBarLabel
+            ),
             //  ステータスバーアイテムの登録
             statusBarItem = vscel.statusbar.createItem
             ({
@@ -63,16 +76,20 @@ export module SysInfo
             (
                 event =>
                 {
+                    const affectsConfiguration = event.affectsConfiguration("sysinfo");
                     if
                     (
-                        event.affectsConfiguration("sysinfo") ||
+                        affectsConfiguration ||
                         (
-                            Config.enabledStatusBar.get("") &&
-                            hasSettingKey(Config.statusBarLabel.get(""))
+                            Config.enabledStatusBar.get() &&
+                            hasSettingKey(stringOrJoin(Config.statusBarLabel.get()))
                         )
                     )
                     {
-                        Config.root.entries.forEach(i => i.clear());
+                        if (affectsConfiguration)
+                        {
+                            updateStatusBarSwitchInterval();
+                        }
                         updateStatusBar();
                     }
                 }
@@ -83,8 +100,8 @@ export module SysInfo
                 {
                     if
                     (
-                        Config.enabledStatusBar.get("") &&
-                        hasSettingKey(Config.statusBarLabel.get(""))
+                        Config.enabledStatusBar.get() &&
+                        hasSettingKey(stringOrJoin(Config.statusBarLabel.get()))
                     )
                     {
                         updateStatusBar();
@@ -92,6 +109,7 @@ export module SysInfo
                 }
             ),
         );
+        updateStatusBarSwitchInterval();
         updateStatusBar();
     };
     const lengthWithEscape = (text: string) => text.replace(/\$\([\w-]+\)/g,"@").length;
@@ -114,13 +132,32 @@ export module SysInfo
         )
         .substr(index, length);
     const clipWithEscape = (text: string, maxTextLength: number) => lengthWithEscape(text) <= maxTextLength ? text: substrWithEscape(text, 0, maxTextLength) +"...";
+    const updateStatusBarSwitchInterval = () : void =>
+    {
+        statusBarTextIndex = 0;
+        if (undefined !== statusBarSwitchInterval)
+        {
+            clearInterval(statusBarSwitchInterval);
+            statusBarSwitchInterval = undefined;
+        }
+        const interval = Config.statusBarSwitchInterval.get();
+        const statusBarLabel = Config.statusBarLabel.get();
+        if (Array.isArray(statusBarLabel) && 1 < statusBarLabel.length && 100 <= interval)
+        {
+            statusBarSwitchInterval = setInterval
+            (
+                switchStatusBarLabel,
+                interval
+            );
+        }
+    }
     const updateStatusBar = () : void =>
     {
-        if (Config.enabledStatusBar.get(""))
+        if (Config.enabledStatusBar.get())
         {
-            StatusBarText = developInfomation
+            statusBarText = developInfomation
             (
-                Config.statusBarLabel.get(""),
+                stringOrAt(Config.statusBarLabel.get(), statusBarTextIndex),
                 getSystemInformation
                 ({
                     categories: [ "basic", "cpu", "memory", "network" ],
@@ -128,9 +165,12 @@ export module SysInfo
                     withInternalExtensions: false,
                 })
             );
-            statusBarItem.text = clipWithEscape(StatusBarText, 48);
-            statusBarItem.command = copyCommandName;
-            statusBarItem.tooltip = locale.map("Click to copy");
+            statusBarItem.text = clipWithEscape(statusBarText, 48);
+            statusBarItem.command = Config.statusBarCommand.get();
+            statusBarItem.tooltip =
+                copyCommandName === statusBarItem.command ? locale.map("Click to copy"):
+                switchCommandName === statusBarItem.command ? locale.map("Click to switch"):
+                `${locale.map("Click to execute")}: ${statusBarItem.command}`;
             statusBarItem.show();
         }
         else
@@ -138,7 +178,16 @@ export module SysInfo
             statusBarItem.hide();
         }
     };
-    const copyStatusBarText = () => vscode.env.clipboard.writeText(StatusBarText);
+    const copyStatusBarText = () => vscode.env.clipboard.writeText(statusBarText);
+    const switchStatusBarLabel = () =>
+    {
+        const statusBarLabel = Config.statusBarLabel.get();
+        if (Array.isArray(statusBarLabel) && 1 < statusBarLabel.length)
+        {
+            statusBarTextIndex = (statusBarTextIndex +1) %statusBarLabel.length;
+            updateStatusBar();
+        }
+    };
     const settingsKeyHeader = "settings:";
     const isSettingKey = (key: string) => key.startsWith(settingsKeyHeader);
     const hasSettingKey = (source: string) => source.includes(settingsKeyHeader);
@@ -266,7 +315,7 @@ export module SysInfo
     };
     export const hideInformation = (information: any): any =>
     {
-        Config.hideItems.get("").forEach
+        Config.hideItems.get().forEach
         (
             path =>
             {
@@ -349,7 +398,7 @@ export module SysInfo
                 placeHolder: locale.map("selectCategories.placeHolder"),
             }
         );
-        if (!selectedCategories)
+        if ( ! selectedCategories)
         {
             return;
         }

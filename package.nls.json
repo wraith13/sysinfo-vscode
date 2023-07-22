@@ -1,9 +1,13 @@
 {
     "sysinfo-vscode.statusBar.enabled.description": "Enable/Disable status bar item",
-    "sysinfo-vscode.statusBar.label.description": "Status bar item's label",
+    "sysinfo-vscode.statusBar.label.description": "Status bar item's label ( You can also specify multiple in an array. )",
+    "sysinfo-vscode.statusBar.SwitchInterval.description": "Status bar item's switch interval(ms)",
+    "sysinfo-vscode.statusBar.command.description": "Status bar item's command on click ( Other commands can be set as well, but assume \"sysinfo-vscode.switchStatusBarLabel\" or \"sysinfo-vscode.copyStatusBarText\" is set. )",
     "sysinfo-vscode.title": "System Information",
     "sysinfo-vscode.showSystemInformation.title": "Show",
     "sysinfo-vscode.showSchema.title": "Show Schema",
+    "sysinfo-vscode.copyStatusBarText.title": "Copy Status bar Text",
+    "sysinfo-vscode.switchStatusBarLabel.title": "Switch Status bar Label",
     "sysinfo-vscode.hideItems.description": "list of hide items ( see README )",
     "W001": "LANG environment variable is empty. Clipboard related extensions do not work correctly with Non-ASCII characters. To avoid this problem, you should launch VS Code from Terminal.app. See <https://github.com/Microsoft/vscode/issues/16261>.",
     "BasicInfo.label": "Basic System Information",
@@ -14,5 +18,7 @@
     "link.marketplace.label": "open in marketplace",
     "link.vscode.label": "open in VS Code",
     "Click to copy": "Click to copy",
+    "Click to switch": "Click to switch",
+    "Click to execute": "Click to execute",
     "Input a scheme URI to show": "Input a scheme URI to show"
 }
